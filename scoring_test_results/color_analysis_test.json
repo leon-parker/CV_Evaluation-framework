@@ -1,0 +1,30 @@
+[
+  {
+    "test_name": "simple_2_colors",
+    "expected_colors": 2,
+    "detected_colors": 2,
+    "color_score": 0.8960999999999999,
+    "accuracy": true
+  },
+  {
+    "test_name": "simple_3_colors",
+    "expected_colors": 3,
+    "detected_colors": 3,
+    "color_score": 0.9554450927734375,
+    "accuracy": true
+  },
+  {
+    "test_name": "moderate_5_colors",
+    "expected_colors": 5,
+    "detected_colors": 3,
+    "color_score": 0.8956794677734374,
+    "accuracy": true
+  },
+  {
+    "test_name": "complex_8_colors",
+    "expected_colors": 8,
+    "detected_colors": 3,
+    "color_score": 0.8402682525951557,
+    "accuracy": false
+  }
+]

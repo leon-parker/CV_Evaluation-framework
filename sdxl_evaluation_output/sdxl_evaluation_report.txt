@@ -1,0 +1,154 @@
+REALCARTOONXL V7 AUTISM EVALUATION REPORT
+==================================================
+
+Generated: 2025-07-23 14:17:50
+Model: RealCartoonXL v7
+Total Images: 6
+
+IMAGE 1: SIMPLE_SINGLE
+Description: Simple single character, clean background
+Prompt: young boy with brown hair, blue shirt, cartoon style, simple clean white background, minimal details...
+Generation Time: 14.7s
+
+AUTISM-FRIENDLY EVALUATION:
+  Overall Score: 0.718
+  Grade: B+ (Good for autism storyboards)
+  Person Count: 0 (✅)
+  Background Simplicity: 0.732
+  Color Appropriateness: 0.391
+  Character Clarity: 0.451
+  Sensory Friendliness: 0.855
+
+QUALITY EVALUATION:
+  TIFA Score: 0.425
+  CLIP Score: 0.307
+  Visual Quality: 1.000
+  Artifact Severity: medium
+
+Generated Caption: anime boy with brown hair and blue shirt staring at camera
+--------------------------------------------------
+
+IMAGE 2: SIMPLE_CONSISTENCY
+Description: Same character for consistency test
+Prompt: same young boy with brown hair, blue shirt, waving hand, cartoon style, simple clean background, con...
+Generation Time: 13.9s
+
+AUTISM-FRIENDLY EVALUATION:
+  Overall Score: 0.656
+  Grade: B+ (Good for autism storyboards)
+  Person Count: 3 (❌)
+  Background Simplicity: 0.744
+  Color Appropriateness: 0.422
+  Character Clarity: 0.454
+  Sensory Friendliness: 0.854
+
+QUALITY EVALUATION:
+  TIFA Score: 0.333
+  CLIP Score: 0.339
+  Visual Quality: 0.700
+  Artifact Severity: medium
+
+Generated Caption: cartoon boy with backpack making a stop sign with his hands
+--------------------------------------------------
+
+IMAGE 3: COMPLEX_BACKGROUND
+Description: Single character with complex background
+Prompt: young boy with brown hair, blue shirt, cartoon style, detailed busy classroom, many objects, colorfu...
+Generation Time: 13.8s
+
+AUTISM-FRIENDLY EVALUATION:
+  Overall Score: 0.582
+  Grade: B (Acceptable for autism storyboards)
+  Person Count: 4 (❌)
+  Background Simplicity: 0.427
+  Color Appropriateness: 0.558
+  Character Clarity: 0.820
+  Sensory Friendliness: 0.811
+
+QUALITY EVALUATION:
+  TIFA Score: 0.186
+  CLIP Score: 0.358
+  Visual Quality: 0.000
+  Artifact Severity: high
+
+Generated Caption: cartoon illustration of a boy sitting at a desk in a classroom
+--------------------------------------------------
+
+IMAGE 4: MULTIPLE_CHARACTERS
+Description: Multiple characters (should score poorly for autism)
+Prompt: three children with different hair colors, playing together, cartoon style, school playground, multi...
+Generation Time: 13.7s
+
+AUTISM-FRIENDLY EVALUATION:
+  Overall Score: 0.670
+  Grade: B+ (Good for autism storyboards)
+  Person Count: 3 (❌)
+  Background Simplicity: 0.438
+  Color Appropriateness: 0.547
+  Character Clarity: 0.883
+  Sensory Friendliness: 0.800
+
+QUALITY EVALUATION:
+  TIFA Score: 0.220
+  CLIP Score: 0.366
+  Visual Quality: 0.100
+  Artifact Severity: high
+
+Generated Caption: cartoon illustration of a group of children playing in a playground
+--------------------------------------------------
+
+IMAGE 5: BUSY_SCENE
+Description: Very busy scene with lots of elements
+Prompt: crowded school cafeteria, many children eating, busy background, lots of details, complex scene, mul...
+Generation Time: 13.4s
+
+AUTISM-FRIENDLY EVALUATION:
+  Overall Score: 0.479
+  Grade: C+ (Needs some improvements)
+  Person Count: 9 (❌)
+  Background Simplicity: 0.395
+  Color Appropriateness: 0.533
+  Character Clarity: 0.850
+  Sensory Friendliness: 0.789
+
+QUALITY EVALUATION:
+  TIFA Score: 0.208
+  CLIP Score: 0.379
+  Visual Quality: 0.000
+  Artifact Severity: high
+
+Generated Caption: there are many children eating in a school cafeteria
+--------------------------------------------------
+
+IMAGE 6: SIMPLE_EMOTIONAL
+Description: Simple emotional scene (good for autism)
+Prompt: young girl feeling happy, big smile, simple expression, cartoon style, plain light blue background, ...
+Generation Time: 13.7s
+
+AUTISM-FRIENDLY EVALUATION:
+  Overall Score: 0.727
+  Grade: B+ (Good for autism storyboards)
+  Person Count: 2 (✅)
+  Background Simplicity: 0.682
+  Color Appropriateness: 0.409
+  Character Clarity: 0.559
+  Sensory Friendliness: 0.856
+
+QUALITY EVALUATION:
+  TIFA Score: 0.386
+  CLIP Score: 0.298
+  Visual Quality: 1.000
+  Artifact Severity: medium
+
+Generated Caption: anime girl with short hair smiling and wearing white shirt
+--------------------------------------------------
+
+SUMMARY STATISTICS:
+Average Autism Score: 0.639
+Score Range: 0.479 - 0.727
+Standard Deviation: 0.086
+
+CONSISTENCY ANALYSIS:
+Overall Grade: Moderate
+Average Score: 0.634
+Range: 0.461 - 0.839

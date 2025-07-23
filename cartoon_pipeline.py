@@ -1,8 +1,7 @@
-"""
-Autism-Integrated Cartoon Pipeline with IP-Adapter and Baked VAE Support
+
+""" Autism-Integrated Cartoon Pipeline with IP-Adapter and Baked VAE Support
 Complete integration of autism-friendly image analysis into the generation pipeline
-Optimized for educational storyboards with character consistency
-"""
+Optimized for educational storyboards with character consistency """
 
 import os
 import torch
@@ -16,18 +15,15 @@ warnings.filterwarnings("ignore")
 
 # Import modular components
 from consistency_manager import ConsistencyManager
-from quality_evaluator import QualityEvaluator  
+from quality_evaluator import QualityEvaluator
 from ip_adapter_manager import IPAdapterManager
 from transformers import CLIPProcessor, CLIPModel
 from sklearn.cluster import KMeans
 
-
 class AutismFriendlyImageAnalyzer:
     """Specialized analyzer for autism storyboard image evaluation"""
-    
     def __init__(self):
         print("🧩 Loading Autism-Friendly Image Analyzer...")
-        
         try:
             # Load CLIP for semantic understanding
             self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
@@ -46,11 +42,10 @@ class AutismFriendlyImageAnalyzer:
             
             self.available = True
             print("✅ Autism-Friendly Image Analyzer ready")
-            
         except Exception as e:
             print(f"❌ Failed to load analyzer: {e}")
             self.available = False
-    
+
     def analyze_autism_suitability(self, image):
         """
         Analyze image suitability for autism storyboards
@@ -83,7 +78,7 @@ class AutismFriendlyImageAnalyzer:
         results["recommendations"] = self.generate_recommendations(results)
         
         return results
-    
+
     def count_people(self, cv_image):
         """Count number of people in image - critical for autism storyboards (max 2)"""
         people_count = 0
@@ -131,7 +126,7 @@ class AutismFriendlyImageAnalyzer:
             "score": 1.0 if people_count <= 2 else max(0.0, 1.0 - (people_count - 2) * 0.3),
             "details": f"Autism storyboards should have maximum 2 people. Detected: {people_count}"
         }
-    
+
     def analyze_background_simplicity(self, cv_image):
         """Analyze background simplicity - autism storyboards need clean, non-distracting backgrounds"""
         gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
@@ -149,7 +144,7 @@ class AutismFriendlyImageAnalyzer:
         border_region = np.zeros_like(gray)
         border_width = min(width//10, height//10, 50)  # Border region
         border_region[:border_width, :] = 1  # Top
-        border_region[-border_width:, :] = 1  # Bottom  
+        border_region[-border_width:, :] = 1  # Bottom
         border_region[:, :border_width] = 1  # Left
         border_region[:, -border_width:] = 1  # Right
         
@@ -181,7 +176,7 @@ class AutismFriendlyImageAnalyzer:
             "grade": grade,
             "details": "Higher score = cleaner, less distracting background"
         }
-    
+
     def analyze_color_appropriateness(self, cv_image):
         """Analyze color palette for autism-friendliness - avoid overwhelming colors"""
         # Convert to different color spaces
@@ -252,7 +247,7 @@ class AutismFriendlyImageAnalyzer:
             "grade": grade,
             "details": "Optimal: 3-4 colors, moderate saturation, consistent brightness"
         }
-    
+
     def analyze_character_clarity(self, cv_image):
         """Analyze how clearly defined characters are - important for autism comprehension"""
         gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
@@ -262,7 +257,6 @@ class AutismFriendlyImageAnalyzer:
         strong_edge_density = np.sum(edges > 0) / edges.size
         
         # Contrast analysis (clear distinction between elements)
-        # Local contrast using Sobel operator
         grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
         grad_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
         gradient_magnitude = np.sqrt(grad_x**2 + grad_y**2)
@@ -273,24 +267,20 @@ class AutismFriendlyImageAnalyzer:
         
         shape_quality = 0
         if len(contours) > 0:
-            # Analyze contour quality
             large_contours = [c for c in contours if cv2.contourArea(c) > 500]
-            
             if large_contours:
-                # Measure contour smoothness and closure
                 smoothness_scores = []
                 for contour in large_contours[:5]:  # Top 5 largest
                     epsilon = 0.02 * cv2.arcLength(contour, True)
                     approx = cv2.approxPolyDP(contour, epsilon, True)
                     smoothness = len(approx) / len(contour)  # Fewer points = smoother
                     smoothness_scores.append(smoothness)
-                
                 shape_quality = np.mean(smoothness_scores) if smoothness_scores else 0
         
         # Combine clarity metrics
-        edge_clarity = min(1.0, strong_edge_density * 8)  # Scale edge density
-        contrast_clarity = min(1.0, avg_contrast * 3)     # Scale contrast
-        shape_clarity = min(1.0, shape_quality * 5)       # Scale shape quality
+        edge_clarity = min(1.0, strong_edge_density * 8)
+        contrast_clarity = min(1.0, avg_contrast * 3)
+        shape_clarity = min(1.0, shape_quality * 5)
         
         character_clarity = (edge_clarity * 0.4 + contrast_clarity * 0.4 + shape_clarity * 0.2)
         
@@ -312,10 +302,9 @@ class AutismFriendlyImageAnalyzer:
             "grade": grade,
             "details": "Higher score = clearer character boundaries and definition"
         }
-    
+
     def analyze_sensory_friendliness(self, cv_image):
         """Analyze sensory aspects - avoid overwhelming visual stimulation"""
-        # Pattern repetition (can be overwhelming)
         gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
         
         # High frequency content (can be overstimulating)
@@ -335,7 +324,6 @@ class AutismFriendlyImageAnalyzer:
         high_freq_ratio = high_freq_energy / total_energy if total_energy > 0 else 0
         
         # Flash/strobe detection (rapid intensity changes)
-        # Simulate by checking local intensity variance
         kernel = np.ones((5,5), np.float32) / 25
         local_mean = cv2.filter2D(gray.astype(np.float32), -1, kernel)
         intensity_variance = np.var(gray.astype(np.float32) - local_mean) / (255**2)
@@ -347,9 +335,9 @@ class AutismFriendlyImageAnalyzer:
         blur_difference = np.mean(np.abs(gray.astype(float) - blurred.astype(float))) / 255.0
         
         # Calculate sensory friendliness
-        pattern_score = 1.0 - min(1.0, high_freq_ratio * 3)  # Lower high-freq = better
-        intensity_score = 1.0 - min(1.0, intensity_variance * 10)  # Lower variance = better
-        motion_score = max(0.0, 1.0 - blur_difference * 2)  # Some blur can be good
+        pattern_score = 1.0 - min(1.0, high_freq_ratio * 3)
+        intensity_score = 1.0 - min(1.0, intensity_variance * 10)
+        motion_score = max(0.0, 1.0 - blur_difference * 2)
         
         sensory_friendliness = (pattern_score * 0.5 + intensity_score * 0.3 + motion_score * 0.2)
         
@@ -372,7 +360,7 @@ class AutismFriendlyImageAnalyzer:
             "grade": grade,
             "details": "Higher score = less overwhelming, more sensory-appropriate"
         }
-    
+
     def analyze_focus_clarity(self, cv_image):
         """Analyze focus clarity - autism storyboards should have one clear focal point"""
         gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
@@ -394,7 +382,7 @@ class AutismFriendlyImageAnalyzer:
         
         # Focus ratio (center should have more detail than periphery)
         focus_ratio = center_edge_density / (peripheral_edge_density + 1e-6)
-        focus_score = min(1.0, focus_ratio / 2.0)  # Normalize
+        focus_score = min(1.0, focus_ratio / 2.0)
         
         # Contrast focus (center should have higher contrast)
         grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
@@ -428,17 +416,16 @@ class AutismFriendlyImageAnalyzer:
             "grade": grade,
             "details": "Higher score = clearer focal point, less distraction"
         }
-    
+
     def calculate_autism_suitability(self, results):
         """Calculate overall autism suitability score"""
-        # Weights for autism-specific priorities
         weights = {
-            "person_count": 0.25,           # CRITICAL: max 2 people
-            "background_simplicity": 0.20,  # Clean backgrounds
-            "character_clarity": 0.20,      # Clear character definition
-            "color_appropriateness": 0.15,  # Sensory-appropriate colors
-            "sensory_friendliness": 0.15,   # Avoid overstimulation
-            "focus_clarity": 0.05          # Single focus point
+            "person_count": 0.25,
+            "background_simplicity": 0.20,
+            "character_clarity": 0.20,
+            "color_appropriateness": 0.15,
+            "sensory_friendliness": 0.15,
+            "focus_clarity": 0.05
         }
         
         total_score = 0
@@ -451,7 +438,7 @@ class AutismFriendlyImageAnalyzer:
         
         autism_suitability = total_score / total_weight if total_weight > 0 else 0.5
         return float(min(1.0, max(0.0, autism_suitability)))
-    
+
     def get_autism_grade(self, suitability_score):
         """Convert autism suitability score to letter grade"""
         if suitability_score >= 0.9:
@@ -472,24 +459,21 @@ class AutismFriendlyImageAnalyzer:
             return "D (Poor for autism storyboards)"
         else:
             return "F (Unsuitable for autism storyboards)"
-    
+
     def generate_recommendations(self, results):
         """Generate specific recommendations for improving autism suitability"""
         recommendations = []
         
-        # Person count recommendations
         person_count = results["person_count"]["count"]
         if person_count > 2:
             recommendations.append(f"🚨 CRITICAL: Reduce to max 2 people (currently {person_count})")
         elif person_count <= 1:
             recommendations.append("✅ Person count is excellent for autism storyboards")
         
-        # Background recommendations
         bg_score = results["background_simplicity"]["score"]
         if bg_score < 0.6:
             recommendations.append("🎨 Simplify background - reduce clutter and details")
         
-        # Color recommendations
         color_score = results["color_appropriateness"]["score"]
         color_count = results["color_appropriateness"]["dominant_colors"]
         if color_count > 6:
@@ -497,22 +481,18 @@ class AutismFriendlyImageAnalyzer:
         if results["color_appropriateness"]["avg_saturation"] > 0.8:
             recommendations.append("🎨 Reduce color saturation - too bright/overwhelming")
         
-        # Character clarity recommendations
         char_score = results["character_clarity"]["score"]
         if char_score < 0.6:
             recommendations.append("🖼️ Improve character clarity - strengthen edges and contrast")
         
-        # Sensory recommendations
         sensory_score = results["sensory_friendliness"]["score"]
         if sensory_score < 0.6:
             recommendations.append("🧩 Reduce visual complexity - may be overstimulating")
         
-        # Focus recommendations
         focus_score = results["focus_clarity"]["score"]
         if focus_score < 0.5:
             recommendations.append("🎯 Create clearer focal point - reduce background distractions")
         
-        # Overall recommendations
         overall_score = results["autism_suitability"]
         if overall_score >= 0.8:
             recommendations.append("🎉 Excellent for autism education!")
@@ -523,10 +503,8 @@ class AutismFriendlyImageAnalyzer:
         
         return recommendations
 
-
 class AutismIntegratedCartoonPipeline:
     """Main pipeline with integrated autism-friendly evaluation"""
-    
     def __init__(self, model_path, ip_adapter_path=None, config=None, enable_autism_scoring=True):
         print("🎨 Loading Autism-Integrated Cartoon Pipeline...")
         
@@ -535,38 +513,25 @@ class AutismIntegratedCartoonPipeline:
         self.config = config or self._default_config()
         self.enable_autism_scoring = enable_autism_scoring
         
-        # Initialize character reference tracking
         self.character_reference_image = None
         self.ip_adapter_loaded = False
         self.baked_vae_compatible = False
         
-        # Check model exists
         if not os.path.exists(model_path):
             print(f"❌ Model not found: {model_path}")
             self.available = False
             return
         
         try:
-            # Load main pipeline
             self._load_diffusion_pipeline()
-            
-            # CRITICAL: Test baked VAE compatibility first
             self._test_baked_vae_compatibility()
-            
-            # CRITICAL: ALWAYS load IP-Adapter - no conditional loading
             self._load_ip_adapter_mandatory()
-            
-            # CRITICAL: Fix tensor dtype issues for baked VAE
             self._fix_tensor_dtypes_baked_vae()
-            
-            # Test IP-Adapter with baked VAE
             self._test_ip_adapter_baked_vae_compatibility()
             
-            # Initialize evaluation components
             self.consistency_manager = ConsistencyManager()
             self.quality_evaluator = QualityEvaluator()
             
-            # Initialize Autism Analyzer
             if self.enable_autism_scoring:
                 self.autism_analyzer = AutismFriendlyImageAnalyzer()
                 print("🧩 Autism analyzer integrated into pipeline")
@@ -574,7 +539,6 @@ class AutismIntegratedCartoonPipeline:
                 self.autism_analyzer = None
                 print("⚠️ Autism analyzer disabled")
             
-            # Initialize IP-Adapter manager
             self.ip_adapter_manager = IPAdapterManager(
                 base_pipeline=self.pipe,
                 ip_adapter_path=ip_adapter_path
@@ -582,13 +546,12 @@ class AutismIntegratedCartoonPipeline:
             
             self.available = True
             print("✅ Autism-Integrated Cartoon Pipeline ready!")
-            
         except Exception as e:
             print(f"❌ Pipeline loading failed: {e}")
             import traceback
             traceback.print_exc()
             self.available = False
-    
+
     def _default_config(self):
         """Default generation configuration optimized for autism + baked VAE"""
         return {
@@ -602,21 +565,21 @@ class AutismIntegratedCartoonPipeline:
             "selection": {
                 "use_consistency": True,
                 "use_ip_adapter": True,
-                "use_autism_scoring": True,  # NEW: Enable autism scoring
-                "quality_weight": 0.25,      # Reduced to make room for autism
+                "use_autism_scoring": True,
+                "quality_weight": 0.25,
                 "consistency_weight": 0.25,
                 "ip_adapter_weight": 0.25,
-                "autism_weight": 0.25        # NEW: Autism score weight
+                "autism_weight": 0.25
             },
-            "autism": {  # NEW: Autism-specific configuration
+            "autism": {
                 "max_people": 2,
                 "target_simplicity": 0.7,
                 "target_clarity": 0.7,
                 "enforce_requirements": True,
-                "reject_threshold": 0.4  # Reject images below this autism score
+                "reject_threshold": 0.35
             },
             "ip_adapter": {
-                "character_weight": 0.3,  # LOWERED for baked VAE compatibility
+                "character_weight": 0.3,
                 "update_reference_from_best": True,
                 "fallback_to_clip": False
             },
@@ -626,7 +589,7 @@ class AutismIntegratedCartoonPipeline:
                 "force_float32_fallback": True
             }
         }
-    
+
     def _load_diffusion_pipeline(self):
         """Load pipeline optimized for baked VAE models"""
         print("🔧 Loading SDXL pipeline with baked VAE support...")
@@ -636,30 +599,25 @@ class AutismIntegratedCartoonPipeline:
             use_safetensors=True,
             variant="fp16"
         )
-        
         self.pipe = self.pipe.to("cuda")
         
-        # Conservative VAE optimizations for baked models
         try:
-            # Try VAE tiling first (safer for baked VAE)
             if hasattr(self.pipe, 'enable_vae_tiling'):
                 self.pipe.enable_vae_tiling()
                 print("✅ VAE tiling enabled for baked VAE")
             else:
-                # Fallback to slicing with caution
                 self.pipe.enable_vae_slicing()
                 print("✅ VAE slicing enabled (fallback)")
         except Exception as e:
             print(f"⚠️ VAE optimization skipped: {e}")
         
         print("✅ Baked VAE pipeline loaded")
-    
+
     def _test_baked_vae_compatibility(self):
         """Test if baked VAE works correctly"""
         print("🧪 Testing baked VAE compatibility...")
         
         try:
-            # Check VAE properties
             if hasattr(self.pipe, 'vae') and self.pipe.vae is not None:
                 print(f"🔍 VAE type: {type(self.pipe.vae).__name__}")
                 print(f"🔍 VAE device: {self.pipe.vae.device}")
@@ -668,11 +626,9 @@ class AutismIntegratedCartoonPipeline:
                 if hasattr(self.pipe.vae, 'config'):
                     scaling_factor = getattr(self.pipe.vae.config, 'scaling_factor', 'unknown')
                     print(f"🔍 VAE scaling factor: {scaling_factor}")
-                    
                     if scaling_factor != 0.13025:
                         print(f"⚠️ Non-standard VAE scaling: {scaling_factor}")
             
-            # Simple test generation
             test_prompt = "a simple red circle on white background"
             print("🧪 Testing basic generation...")
             
@@ -684,43 +640,36 @@ class AutismIntegratedCartoonPipeline:
                 guidance_scale=3.0
             )
             
-            # Check if result is black
             test_image = result.images[0]
             img_array = np.array(test_image)
             
-            # More sophisticated black image detection
             mean_value = np.mean(img_array)
             std_value = np.std(img_array)
             
-            if mean_value < 15 and std_value < 10:  # Very dark with low variation
+            if mean_value < 15 and std_value < 10:
                 print("❌ Baked VAE producing black/dark images")
                 self.baked_vae_compatible = False
-                
-                # Try with different settings
                 print("🔧 Trying VAE fallback settings...")
                 return self._try_vae_fallback_test()
             else:
                 print(f"✅ Baked VAE working (mean: {mean_value:.1f}, std: {std_value:.1f})")
                 self.baked_vae_compatible = True
                 return True
-                
         except Exception as e:
             print(f"❌ Baked VAE test failed: {e}")
             self.baked_vae_compatible = False
             return False
-    
+
     def _try_vae_fallback_test(self):
         """Try alternative settings for problematic baked VAE"""
         print("🔧 Trying VAE fallback configurations...")
         
         try:
-            # Disable VAE optimizations
             if hasattr(self.pipe, 'disable_vae_slicing'):
                 self.pipe.disable_vae_slicing()
             if hasattr(self.pipe, 'disable_vae_tiling'):
                 self.pipe.disable_vae_tiling()
             
-            # Test with float32 VAE
             original_vae_dtype = self.pipe.vae.dtype
             self.pipe.vae = self.pipe.vae.to(dtype=torch.float32)
             
@@ -736,7 +685,6 @@ class AutismIntegratedCartoonPipeline:
             img_array = np.array(test_image)
             mean_value = np.mean(img_array)
             
-            # Restore VAE dtype
             self.pipe.vae = self.pipe.vae.to(dtype=original_vae_dtype)
             
             if mean_value > 15:
@@ -747,11 +695,10 @@ class AutismIntegratedCartoonPipeline:
             else:
                 print("❌ VAE fallback still produces black images")
                 return False
-                
         except Exception as e:
             print(f"❌ VAE fallback test failed: {e}")
             return False
-    
+
     def _load_ip_adapter_mandatory(self):
         """Load IP-Adapter with baked VAE considerations"""
         print("🎭 Loading IP-Adapter for baked VAE model...")
@@ -765,16 +712,12 @@ class AutismIntegratedCartoonPipeline:
                 torch_dtype=torch.float16
             )
             
-            # Set conservative initial scale for baked VAE
             initial_scale = self.config["ip_adapter"]["character_weight"]
             self.pipe.set_ip_adapter_scale(initial_scale)
             self.ip_adapter_loaded = True
             print(f"✅ IP-Adapter loaded with scale {initial_scale}")
-            
         except Exception as e:
             print(f"❌ HuggingFace IP-Adapter failed: {e}")
-            
-            # Try local file if provided
             if self.ip_adapter_path and os.path.exists(self.ip_adapter_path):
                 try:
                     print(f"📥 Trying local IP-Adapter: {self.ip_adapter_path}")
@@ -787,32 +730,26 @@ class AutismIntegratedCartoonPipeline:
                     raise Exception(f"IP-Adapter loading failed: {e2}")
             else:
                 raise Exception(f"IP-Adapter loading failed and no local backup: {e}")
-    
+
     def _fix_tensor_dtypes_baked_vae(self):
         """Fix tensor dtypes specifically for baked VAE + IP-Adapter"""
         print("🔧 Fixing tensor dtypes for baked VAE + IP-Adapter...")
         
         try:
-            # Handle baked VAE specifically
             if hasattr(self.pipe, 'vae') and self.pipe.vae is not None:
                 print(f"🔍 Baked VAE device: {self.pipe.vae.device}")
                 print(f"🔍 Baked VAE dtype: {self.pipe.vae.dtype}")
-                
-                # Ensure VAE is on CUDA with correct dtype
                 self.pipe.vae = self.pipe.vae.to(device="cuda", dtype=torch.float16)
                 print("✅ Baked VAE synced to CUDA float16")
             
-            # IP-Adapter components
             if hasattr(self.pipe, 'image_encoder') and self.pipe.image_encoder is not None:
                 self.pipe.image_encoder = self.pipe.image_encoder.to(device="cuda", dtype=torch.float16)
                 print("✅ Image encoder synced with baked VAE")
             
-            # UNet
             if hasattr(self.pipe, 'unet'):
                 self.pipe.unet = self.pipe.unet.to(device="cuda", dtype=torch.float16)
                 print("✅ UNet synced")
             
-            # Text encoders
             if hasattr(self.pipe, 'text_encoder'):
                 self.pipe.text_encoder = self.pipe.text_encoder.to(device="cuda", dtype=torch.float16)
             if hasattr(self.pipe, 'text_encoder_2'):
@@ -820,10 +757,9 @@ class AutismIntegratedCartoonPipeline:
             
             torch.cuda.synchronize()
             print("✅ Baked VAE + IP-Adapter tensor sync complete")
-            
         except Exception as e:
             print(f"⚠️ Tensor sync warning: {e}")
-    
+
     def _test_ip_adapter_baked_vae_compatibility(self):
         """Test IP-Adapter with baked VAE"""
         print("🧪 Testing IP-Adapter with baked VAE...")
@@ -833,10 +769,7 @@ class AutismIntegratedCartoonPipeline:
             return
         
         try:
-            # Create simple test image
             dummy_image = Image.new('RGB', (512, 512), color=(128, 128, 128))
-            
-            # Test with minimal IP-Adapter influence
             self.pipe.set_ip_adapter_scale(0.1)
             
             result = self.pipe(
@@ -854,23 +787,19 @@ class AutismIntegratedCartoonPipeline:
             
             if mean_value < 15:
                 print("❌ IP-Adapter + baked VAE producing black images")
-                # Lower the default IP-Adapter scale even more
                 self.config["ip_adapter"]["character_weight"] = 0.15
                 print("🔧 Lowered IP-Adapter scale to 0.15")
             else:
                 print(f"✅ IP-Adapter + baked VAE working (mean: {mean_value:.1f})")
-            
         except Exception as e:
             print(f"❌ IP-Adapter + baked VAE test failed: {e}")
-            # Emergency fallback - very low scale
             self.config["ip_adapter"]["character_weight"] = 0.05
             print("🚨 Emergency fallback: IP-Adapter scale set to 0.05")
-    
+
     def _create_proper_dummy_image(self):
         """Create a simple dummy image for IP-Adapter"""
-        # Simple gray image - no complex preprocessing
         return Image.new('RGB', (1024, 1024), color=(128, 128, 128))
-    
+
     def set_character_reference_image(self, reference_image_path_or_image):
         """Set the character reference image for IP-Adapter consistency"""
         if isinstance(reference_image_path_or_image, str):
@@ -878,34 +807,28 @@ class AutismIntegratedCartoonPipeline:
         else:
             reference_image = reference_image_path_or_image
         
-        # Resize to consistent size
         if reference_image.size != (1024, 1024):
             reference_image = reference_image.resize((1024, 1024), Image.Resampling.LANCZOS)
         
         self.character_reference_image = reference_image
         print("🎭 Character reference set for IP-Adapter consistency")
         
-        # Analyze autism suitability of reference if available
         if self.autism_analyzer and self.autism_analyzer.available:
             autism_result = self.autism_analyzer.analyze_autism_suitability(reference_image)
-            print(f"🧩 Reference image autism score: {autism_result['autism_suitability']:.3f}")
+            print(f"🧩 Reference image autism suitability: {autism_result['autism_suitability']:.3f}")
             print(f"   Grade: {autism_result['autism_grade']}")
             if autism_result['autism_suitability'] < 0.6:
                 print("⚠️ Warning: Reference image may not be ideal for autism storyboards")
         
         return reference_image
-    
+
     def generate_single_image(self, prompt, negative_prompt="", use_ip_adapter=None, **kwargs):
         """Generate single best image with character consistency and autism scoring"""
         if not self.available:
             return None
         
-        # Use IP-Adapter if loaded and reference exists
         if use_ip_adapter is None:
-            use_ip_adapter = (
-                self.ip_adapter_loaded and 
-                self.character_reference_image is not None
-            )
+            use_ip_adapter = self.ip_adapter_loaded and self.character_reference_image is not None
         
         result = self.generate_with_selection(
             prompt=prompt,
@@ -919,13 +842,13 @@ class AutismIntegratedCartoonPipeline:
             return {
                 "image": result["best_image"],
                 "score": result["best_score"],
-                "autism_score": result.get("autism_score", 0.5),
+                "autism_suitability": result.get("autism_suitability", 0.5),
                 "autism_grade": result.get("autism_grade", "Not evaluated"),
                 "generation_time": result["generation_time"],
                 "used_ip_adapter": result.get("used_ip_adapter", False)
             }
         return None
-    
+
     def generate_with_selection(self, prompt, negative_prompt="", num_images=3, use_ip_adapter=None, **kwargs):
         """Generate multiple images with autism-aware selection"""
         if not self.available:
@@ -933,11 +856,9 @@ class AutismIntegratedCartoonPipeline:
         
         print(f"🎨 Generating {num_images} images for intelligent selection...")
         
-        # Force IP-Adapter if loaded
         if use_ip_adapter is None:
             use_ip_adapter = self.ip_adapter_loaded
         
-        # Prepare generation settings
         settings = self._prepare_generation_settings(
             prompt=prompt,
             negative_prompt=negative_prompt,
@@ -947,35 +868,25 @@ class AutismIntegratedCartoonPipeline:
         
         start_time = time.time()
         
-        # ===== BAKED VAE + IP-ADAPTER IMPLEMENTATION =====
         if use_ip_adapter and self.ip_adapter_loaded:
             if self.character_reference_image is not None:
                 print("🎭 Using IP-Adapter with character reference")
-                
-                # Set IP-Adapter scale (lower for baked VAE)
                 self.pipe.set_ip_adapter_scale(self.config["ip_adapter"]["character_weight"])
-                
-                # Try generation with baked VAE error handling
                 result = self._generate_with_baked_vae_handling(
                     ip_adapter_image=self.character_reference_image,
                     settings=settings
                 )
                 used_ip_adapter = True
-                
             else:
-                # First image - use minimal IP-Adapter influence
                 print("🎭 First image - minimal IP-Adapter influence")
-                
                 dummy_reference = self._create_proper_dummy_image()
-                self.pipe.set_ip_adapter_scale(0.05)  # Very minimal for first image
-                
+                self.pipe.set_ip_adapter_scale(0.05)
                 result = self._generate_with_baked_vae_handling(
                     ip_adapter_image=dummy_reference,
                     settings=settings
                 )
                 used_ip_adapter = True
         else:
-            # Fallback without IP-Adapter
             print("🎨 Generating without IP-Adapter")
             result = self._generate_with_baked_vae_handling(settings=settings)
             used_ip_adapter = False
@@ -983,7 +894,6 @@ class AutismIntegratedCartoonPipeline:
         if result is None or not result.images:
             raise Exception("Image generation failed - check baked VAE compatibility!")
         
-        # Check for black images
         for i, img in enumerate(result.images):
             img_array = np.array(img)
             mean_val = np.mean(img_array)
@@ -992,10 +902,8 @@ class AutismIntegratedCartoonPipeline:
         
         gen_time = time.time() - start_time
         
-        # Evaluate all generated images
         evaluation_results = self.quality_evaluator.evaluate_batch(result.images, prompt)
         
-        # Select best image with autism awareness
         best_result = self._select_best_image_with_autism_scoring(
             images=result.images,
             evaluations=evaluation_results,
@@ -1003,7 +911,6 @@ class AutismIntegratedCartoonPipeline:
             use_ip_adapter=used_ip_adapter
         )
         
-        # Store selected image for consistency tracking
         if self.consistency_manager.available and best_result:
             self.consistency_manager.store_selected_image(
                 image=best_result["image"],
@@ -1011,19 +918,18 @@ class AutismIntegratedCartoonPipeline:
                 tifa_score=best_result["tifa_score"]
             )
         
-        # Update character reference from first generation
         if (self.character_reference_image is None and best_result and 
             self.config["ip_adapter"]["update_reference_from_best"]):
             print("🎭 Setting first generated image as character reference")
             self.set_character_reference_image(best_result["image"])
-            # Increase IP-Adapter scale for subsequent images
             self.pipe.set_ip_adapter_scale(self.config["ip_adapter"]["character_weight"])
         
         return {
             "best_image": best_result["image"],
-            "best_score": best_result["combined_score"],
+            "best_score": best_result["selection_score"],
             "best_index": best_result["index"],
-            "autism_score": best_result.get("autism_score", 0.5),
+            "autism_suitability": best_result.get("autism_suitability", 0.5),
+            "simplicity_score": best_result.get("simplicity_score", 0.5),
             "autism_grade": best_result.get("autism_grade", "Not evaluated"),
             "autism_analysis": best_result.get("autism_analysis", {}),
             "all_images": result.images,
@@ -1032,49 +938,42 @@ class AutismIntegratedCartoonPipeline:
             "used_ip_adapter": used_ip_adapter,
             "consistency_used": len(self.consistency_manager.selected_images_history) > 0
         }
-    
+
     def _generate_with_baked_vae_handling(self, ip_adapter_image=None, settings=None):
         """Generate with proper baked VAE error handling"""
         try:
-            # First attempt - normal generation
             if ip_adapter_image is not None:
                 result = self.pipe(ip_adapter_image=ip_adapter_image, **settings)
             else:
                 result = self.pipe(**settings)
             
-            # Quick black image check
             if result and result.images:
                 first_img = np.array(result.images[0])
-                if np.mean(first_img) > 15:  # Not black
+                if np.mean(first_img) > 15:
                     return result
                 else:
                     print("⚠️ Black image detected, trying fallback...")
-            
         except Exception as e:
             print(f"⚠️ Generation failed: {e}, trying fallback...")
         
-        # Fallback generation for baked VAE issues
         return self._baked_vae_fallback_generation(ip_adapter_image, settings)
-    
+
     def _baked_vae_fallback_generation(self, ip_adapter_image, settings):
         """Fallback generation for baked VAE issues"""
         print("🔧 Using baked VAE fallback generation...")
         
         try:
-            # Disable VAE optimizations
             if hasattr(self.pipe, 'disable_vae_slicing'):
                 self.pipe.disable_vae_slicing()
             if hasattr(self.pipe, 'disable_vae_tiling'):
                 self.pipe.disable_vae_tiling()
             
-            # Try with float32 VAE if enabled in config
             if self.config["baked_vae"]["force_float32_fallback"]:
                 original_vae_dtype = self.pipe.vae.dtype
                 self.pipe.vae = self.pipe.vae.to(dtype=torch.float32)
                 
                 try:
                     if ip_adapter_image is not None:
-                        # Lower IP-Adapter scale for fallback
                         original_scale = self.pipe.get_ip_adapter_scale() if hasattr(self.pipe, 'get_ip_adapter_scale') else None
                         self.pipe.set_ip_adapter_scale(0.1)
                         result = self.pipe(ip_adapter_image=ip_adapter_image, **settings)
@@ -1083,28 +982,21 @@ class AutismIntegratedCartoonPipeline:
                     else:
                         result = self.pipe(**settings)
                     
-                    # Restore VAE dtype
                     self.pipe.vae = self.pipe.vae.to(dtype=original_vae_dtype)
-                    
                     return result
-                    
                 except Exception as e:
-                    # Restore VAE dtype even on failure
                     self.pipe.vae = self.pipe.vae.to(dtype=original_vae_dtype)
                     print(f"❌ Float32 fallback failed: {e}")
             
-            # Final attempt without IP-Adapter
             if ip_adapter_image is not None:
                 print("🚨 Final fallback: disabling IP-Adapter")
                 return self.pipe(**settings)
             
             return None
-            
         except Exception as e:
             print(f"❌ All fallback attempts failed: {e}")
             return None
         finally:
-            # Re-enable optimizations
             try:
                 if hasattr(self.pipe, 'enable_vae_tiling'):
                     self.pipe.enable_vae_tiling()
@@ -1112,17 +1004,15 @@ class AutismIntegratedCartoonPipeline:
                     self.pipe.enable_vae_slicing()
             except:
                 pass
-    
+
     def _prepare_generation_settings(self, prompt, negative_prompt, num_images, **kwargs):
         """Prepare settings for image generation with autism considerations"""
-        # Add autism-specific negative prompts
         autism_negative_terms = [
-            "multiple people", "crowd", "group", "busy background", 
+            "multiple people", "crowd", "group", "busy background",
             "cluttered", "complex patterns", "overwhelming", "chaotic",
             "too many colors", "sensory overload", "distracting elements"
         ]
         
-        # Combine with existing negative prompt
         full_negative = negative_prompt or "blurry, low quality, distorted, deformed"
         if self.enable_autism_scoring:
             full_negative = f"{full_negative}, {', '.join(autism_negative_terms)}"
@@ -1136,15 +1026,15 @@ class AutismIntegratedCartoonPipeline:
         }
         
         return settings
-    
+
     def _select_best_image_with_autism_scoring(self, images, evaluations, prompt, use_ip_adapter):
         """Select best image using TIFA + CLIP + IP-Adapter consistency + Autism scoring"""
         is_first_image = len(self.consistency_manager.selected_images_history) == 0
         
         best_index = 0
-        best_combined_score = -1
-        best_autism_score = -1
-        best_simplicity_score = -1  # ✅ NEW: Track individual simplicity score
+        best_selection_score = -1
+        best_autism_suitability = -1
+        best_simplicity_score = -1
         best_autism_analysis = None
         
         autism_results = []
@@ -1152,87 +1042,75 @@ class AutismIntegratedCartoonPipeline:
         for idx, (image, evaluation) in enumerate(zip(images, evaluations)):
             tifa_score = evaluation["score"]
             
-            # Check for black image and penalize
             img_array = np.array(image)
             mean_brightness = np.mean(img_array)
             brightness_penalty = 0
             
-            if mean_brightness < 15:  # Very dark image
-                brightness_penalty = 0.5  # Heavy penalty
+            if mean_brightness < 15:
+                brightness_penalty = 0.5
                 print(f"⚠️ Image {idx} is very dark (brightness: {mean_brightness:.1f})")
-            elif mean_brightness < 30:  # Somewhat dark
-                brightness_penalty = 0.2  # Moderate penalty
+            elif mean_brightness < 30:
+                brightness_penalty = 0.2
             
-            # Calculate CLIP consistency if not first image
             clip_consistency = 0.5
             if not is_first_image and self.consistency_manager.available:
                 image_embedding = self.consistency_manager.get_image_embedding(image)
                 clip_consistency = self.consistency_manager.calculate_consistency_score(image_embedding)
             
-            # Calculate IP-Adapter consistency if used
             ip_adapter_consistency = 0.5
             if use_ip_adapter and self.ip_adapter_manager and self.ip_adapter_manager.available:
                 ip_adapter_consistency = self.ip_adapter_manager.get_consistency_score(image)
             
-            # ✅ FIXED: Calculate simplicity score (individual metric)
             simplicity_score = 0.5
             autism_analysis = {}
             if self.enable_autism_scoring and self.autism_analyzer and self.autism_analyzer.available:
                 autism_analysis = self.autism_analyzer.analyze_autism_suitability(image)
-                simplicity_score = autism_analysis["autism_suitability"]  # ✅ This is just simplicity
+                simplicity_score = autism_analysis["autism_suitability"]
                 autism_results.append(autism_analysis)
                 
-                # ✅ FIXED: Print simplicity evaluation (not autism score)
-                print(f"   Image {idx+1}: Simplicity score = {simplicity_score:.3f} ({autism_analysis['autism_grade']})")
+                print(f"   Image {idx+1}: Simplicity component = {simplicity_score:.3f} ({autism_analysis['autism_grade']})")
                 
-                # Apply hard rejection for very poor simplicity scores
                 if simplicity_score < self.config["autism"]["reject_threshold"]:
                     print(f"   ❌ Rejected: Simplicity score too low ({simplicity_score:.3f})")
-                    brightness_penalty += 1.0  # Effectively reject this image
+                    brightness_penalty += 1.0
             else:
                 autism_results.append({"autism_suitability": 0.5, "autism_grade": "Not evaluated"})
             
-            # ✅ FIXED: Calculate the REAL autism score (weighted combination)
             if self.enable_autism_scoring and self.config["selection"]["use_autism_scoring"]:
-                # The autism score IS the weighted combination of all 3 metrics
-                autism_score = (
-                    simplicity_score * 0.364 +    # SIMPLICITY - 36.4% (highest priority)
-                    tifa_score * 0.333 +          # ACCURACY - 33.3% 
-                    clip_consistency * 0.303      # CONSISTENCY - 30.3% (lowest priority)
+                autism_suitability = (
+                    simplicity_score * 0.364 +
+                    tifa_score * 0.333 +
+                    clip_consistency * 0.303
                 )
                 
-                # The combined score is the autism score minus penalties
-                combined_score = autism_score - brightness_penalty
+                selection_score = autism_suitability - brightness_penalty
                 
-                print(f"   Image {idx+1}: Autism score = {autism_score:.3f} (weighted combination)")
-                
+                print(f"   Image {idx+1}: Autism suitability = {autism_suitability:.3f} (weighted: simplicity + accuracy + consistency)")
             else:
-                # Original scoring without autism
-                autism_score = 0.5  # Default when autism scoring disabled
+                autism_suitability = 0.5
                 
                 if use_ip_adapter:
-                    combined_score = (
+                    selection_score = (
                         tifa_score * self.config["selection"]["quality_weight"] +
                         clip_consistency * self.config["selection"]["consistency_weight"] +
                         ip_adapter_consistency * self.config["selection"]["ip_adapter_weight"] -
                         brightness_penalty
                     )
                 else:
-                    combined_score = (
+                    selection_score = (
                         tifa_score * self.config["selection"]["quality_weight"] +
-                        clip_consistency * (self.config["selection"]["consistency_weight"] + 
+                        clip_consistency * (self.config["selection"]["consistency_weight"] +
                                           self.config["selection"]["ip_adapter_weight"]) -
                         brightness_penalty
                     )
             
-            if combined_score > best_combined_score:
-                best_combined_score = combined_score
+            if selection_score > best_selection_score:
+                best_selection_score = selection_score
                 best_index = idx
-                best_autism_score = autism_score  # ✅ This is now the weighted combination
-                best_simplicity_score = simplicity_score  # ✅ Individual simplicity score
+                best_autism_suitability = autism_suitability
+                best_simplicity_score = simplicity_score
                 best_autism_analysis = autism_analysis
         
-        # Print autism recommendations for best image
         if best_autism_analysis and "recommendations" in best_autism_analysis:
             print("\n🧩 Autism recommendations for selected image:")
             for rec in best_autism_analysis["recommendations"][:3]:
@@ -1240,16 +1118,16 @@ class AutismIntegratedCartoonPipeline:
         
         return {
             "image": images[best_index],
-            "combined_score": best_combined_score,
+            "selection_score": best_selection_score,
             "tifa_score": evaluations[best_index]["score"],
-            "autism_score": best_autism_score,          # ✅ FIXED: Weighted combination (36.4% + 33.3% + 30.3%)
-            "simplicity_score": best_simplicity_score,  # ✅ NEW: Individual simplicity score
+            "autism_suitability": best_autism_suitability,
+            "simplicity_score": best_simplicity_score,
             "autism_grade": best_autism_analysis.get("autism_grade", "Not evaluated") if best_autism_analysis else "Not evaluated",
             "autism_analysis": best_autism_analysis,
             "index": best_index,
             "evaluation": evaluations[best_index]
         }
-    
+
     def generate_autism_optimized_storyboard(self, prompts_list, character_reference_image=None, 
                                            enforce_autism_requirements=True, max_retries=3):
         """Generate storyboard specifically optimized for autism education"""
@@ -1258,11 +1136,9 @@ class AutismIntegratedCartoonPipeline:
         
         print(f"🧩 Generating AUTISM-OPTIMIZED storyboard with {len(prompts_list)} prompts")
         
-        # Ensure autism scoring is enabled
         original_autism_setting = self.enable_autism_scoring
         self.enable_autism_scoring = True
         
-        # Set character reference if provided
         if character_reference_image is not None:
             self.set_character_reference_image(character_reference_image)
         
@@ -1279,7 +1155,7 @@ class AutismIntegratedCartoonPipeline:
             while retry_count < max_retries:
                 result = self.generate_with_selection(
                     prompt=prompt,
-                    num_images=self.config["generation"]["num_images_per_prompt"] + retry_count,  # Generate more on retries
+                    num_images=self.config["generation"]["num_images_per_prompt"] + retry_count,
                     use_ip_adapter=self.ip_adapter_loaded
                 )
                 
@@ -1288,17 +1164,15 @@ class AutismIntegratedCartoonPipeline:
                     retry_count += 1
                     continue
                 
-                autism_score = result.get("autism_score", 0.5)
+                autism_suitability = result.get("autism_suitability", 0.5)
                 autism_grade = result.get("autism_grade", "Not evaluated")
                 
-                print(f"   Autism score: {autism_score:.3f} ({autism_grade})")
+                print(f"   Autism suitability: {autism_suitability:.3f} ({autism_grade})")
                 
-                # Check if meets autism requirements
-                if enforce_autism_requirements and autism_score < 0.6:
+                if enforce_autism_requirements and autism_suitability < 0.6:
                     print(f"   ⚠️ Below autism threshold (0.6), retry {retry_count + 1}/{max_retries}")
                     retry_count += 1
                     
-                    # Adjust prompt for better autism compliance
                     if retry_count < max_retries:
                         prompt = self._enhance_prompt_for_autism(prompt)
                         print(f"   🔧 Enhanced prompt: {prompt[:80]}...")
@@ -1311,35 +1185,33 @@ class AutismIntegratedCartoonPipeline:
                     "prompt": prompt,
                     "prompt_index": prompt_idx,
                     "best_image": best_result["best_image"],
-                    "final_score": best_result["best_score"],
-                    "autism_score": best_result.get("autism_score", 0.5),
+                    "selection_score": best_result["best_score"],
+                    "autism_suitability": best_result.get("autism_suitability", 0.5),
+                    "simplicity_score": best_result.get("simplicity_score", 0.5),
                     "autism_grade": best_result.get("autism_grade", "Not evaluated"),
                     "autism_analysis": best_result.get("autism_analysis", {}),
                     "used_ip_adapter": best_result.get("used_ip_adapter", False),
                     "retry_count": retry_count
                 })
-                autism_scores.append(best_result.get("autism_score", 0.5))
+                autism_scores.append(best_result.get("autism_suitability", 0.5))
                 retry_counts.append(retry_count)
             else:
                 print(f"   ❌ Failed to generate suitable image after {max_retries} attempts")
         
-        # Calculate autism statistics
         avg_autism_score = np.mean(autism_scores) if autism_scores else 0.0
         autism_compliance_rate = sum(1 for s in autism_scores if s >= 0.6) / len(autism_scores) if autism_scores else 0.0
         
-        # Final consistency report
         final_consistency = {"available": False}
         if self.consistency_manager.available:
             final_consistency = self.consistency_manager.get_consistency_report()
         
-        # Generate autism report
         autism_report = self._generate_autism_storyboard_report(
             sequence_results, autism_scores, retry_counts
         )
         
         print(f"\n🎉 AUTISM-OPTIMIZED STORYBOARD COMPLETE!")
         print(f"📖 Generated: {len(sequence_results)} images")
-        print(f"🧩 Average autism score: {avg_autism_score:.3f}")
+        print(f"🧩 Average autism suitability: {avg_autism_score:.3f}")
         print(f"✅ Autism compliance rate: {autism_compliance_rate:.1%}")
         print(f"🔄 Total retries: {sum(retry_counts)}")
         
@@ -1347,7 +1219,6 @@ class AutismIntegratedCartoonPipeline:
             print(f"📊 Overall CLIP Consistency: {final_consistency['consistency_grade']} "
                   f"(Score: {final_consistency['average_consistency']:.3f})")
         
-        # Restore original autism setting
         self.enable_autism_scoring = original_autism_setting
         
         return {
@@ -1369,7 +1240,7 @@ class AutismIntegratedCartoonPipeline:
             "total_prompts": len(prompts_list),
             "successful_generations": len(sequence_results)
         }
-    
+
     def _enhance_prompt_for_autism(self, prompt):
         """Enhance prompt to improve autism suitability"""
         autism_enhancements = [
@@ -1382,7 +1253,6 @@ class AutismIntegratedCartoonPipeline:
             "uncluttered scene"
         ]
         
-        # Add random autism-friendly enhancements
         import random
         enhancements_to_add = random.sample(autism_enhancements, 2)
         
@@ -1392,7 +1262,7 @@ class AutismIntegratedCartoonPipeline:
                 enhanced_prompt += f", {enhancement}"
         
         return enhanced_prompt
-    
+
     def _generate_autism_storyboard_report(self, sequence_results, autism_scores, retry_counts):
         """Generate detailed autism suitability report for storyboard"""
         report = {
@@ -1409,7 +1279,6 @@ class AutismIntegratedCartoonPipeline:
             "recommendations": []
         }
         
-        # Analyze each frame
         issue_counter = {}
         
         for result in sequence_results:
@@ -1417,13 +1286,12 @@ class AutismIntegratedCartoonPipeline:
             
             frame_detail = {
                 "prompt": result["prompt"],
-                "autism_score": result.get("autism_score", 0.5),
+                "autism_score": result.get("autism_suitability", 0.5),
                 "autism_grade": result.get("autism_grade", "Not evaluated"),
                 "retry_count": result.get("retry_count", 0),
                 "key_metrics": {}
             }
             
-            # Extract key metrics
             if autism_analysis:
                 frame_detail["key_metrics"] = {
                     "person_count": autism_analysis.get("person_count", {}).get("count", "Unknown"),
@@ -1432,7 +1300,6 @@ class AutismIntegratedCartoonPipeline:
                     "sensory_friendliness": autism_analysis.get("sensory_friendliness", {}).get("score", 0.0)
                 }
                 
-                # Track common issues
                 recommendations = autism_analysis.get("recommendations", [])
                 for rec in recommendations:
                     if "CRITICAL" in rec:
@@ -1448,10 +1315,8 @@ class AutismIntegratedCartoonPipeline:
             
             report["frame_details"].append(frame_detail)
         
-        # Summarize common issues
         report["common_issues"] = issue_counter
         
-        # Generate overall recommendations
         if report["summary"]["average_autism_score"] < 0.6:
             report["recommendations"].append("⚠️ Overall autism suitability is LOW - significant improvements needed")
         elif report["summary"]["average_autism_score"] < 0.8:
@@ -1466,7 +1331,7 @@ class AutismIntegratedCartoonPipeline:
             report["recommendations"].append("🎨 Consider simplifying backgrounds and reducing visual complexity")
         
         return report
-    
+
     def generate_with_progressive_improvement(self, prompt, num_images=3, use_ip_adapter=None, 
                                              quality_threshold=0.5, max_iterations=3,
                                              autism_threshold=0.6):
@@ -1481,7 +1346,7 @@ class AutismIntegratedCartoonPipeline:
         
         best_image = None
         best_score = 0.0
-        best_autism_score = 0.0
+        best_autism_suitability = 0.0
         score_progression = []
         autism_progression = []
         prompt_history = [prompt]
@@ -1490,7 +1355,6 @@ class AutismIntegratedCartoonPipeline:
         for iteration in range(max_iterations):
             print(f"🔄 Iteration {iteration + 1}/{max_iterations}: {current_prompt[:60]}...")
             
-            # Generate images using your existing selection method
             result = self.generate_with_selection(
                 prompt=current_prompt,
                 negative_prompt=current_negative,
@@ -1503,22 +1367,20 @@ class AutismIntegratedCartoonPipeline:
                 break
             
             current_score = result["best_score"]
-            current_autism_score = result.get("autism_score", 0.5)
+            current_autism_suitability = result.get("autism_suitability", 0.5)
             current_image = result["best_image"]
             
             score_progression.append(current_score)
-            autism_progression.append(current_autism_score)
+            autism_progression.append(current_autism_suitability)
             
-            # Update overall best if this iteration is better
             if current_score > best_score:
                 best_score = current_score
                 best_image = current_image
-                best_autism_score = current_autism_score
+                best_autism_suitability = current_autism_suitability
             
             print(f"✨ Score this iteration: {current_score:.3f}")
-            print(f"🧩 Autism score: {current_autism_score:.3f}")
+            print(f"🧩 Autism suitability: {current_autism_suitability:.3f}")
             
-            # Analyze the result using your PromptImprover
             is_first_selected = len(self.consistency_manager.selected_images_history) == 1
             analysis = prompt_improver.analyze_prompt_image_alignment(
                 current_image, 
@@ -1529,30 +1391,25 @@ class AutismIntegratedCartoonPipeline:
             print(f"📊 CLIP similarity: {analysis['clip_similarity']:.3f}")
             print(f"📝 Caption: {analysis['caption'][:60]}...")
             
-            # Check consistency issues
             consistency_issues = analysis.get("consistency_issues", {})
             if consistency_issues["severity"] != "low":
                 print(f"⚠️ Consistency issues detected: {consistency_issues['severity']}")
             
-            # Check if we should continue improving
             meets_quality = current_score >= quality_threshold
-            meets_autism = current_autism_score >= autism_threshold or not self.enable_autism_scoring
+            meets_autism = current_autism_suitability >= autism_threshold or not self.enable_autism_scoring
             
             if meets_quality and meets_autism:
                 print(f"✅ Quality threshold ({quality_threshold}) and autism threshold ({autism_threshold}) reached!")
                 break
             
-            # Only try to improve prompt if we haven't reached the last iteration
             if iteration < max_iterations - 1:
-                # Generate improved prompts using your PromptImprover
                 improved = prompt_improver.improve_prompts(
                     current_prompt, 
                     analysis, 
                     current_negative
                 )
                 
-                # Add autism-specific improvements if score is low
-                if self.enable_autism_scoring and current_autism_score < autism_threshold:
+                if self.enable_autism_scoring and current_autism_suitability < autism_threshold:
                     current_prompt = self._enhance_prompt_for_autism(improved["positive"])
                     print(f"🧩 Added autism enhancements to prompt")
                 else:
@@ -1570,7 +1427,6 @@ class AutismIntegratedCartoonPipeline:
                 else:
                     print("🤔 No prompt improvement suggested")
         
-        # Show final improvement summary
         if len(score_progression) > 1:
             total_improvement = score_progression[-1] - score_progression[0]
             autism_improvement = autism_progression[-1] - autism_progression[0] if autism_progression else 0
@@ -1581,7 +1437,7 @@ class AutismIntegratedCartoonPipeline:
         return {
             "best_image": best_image,
             "best_score": best_score,
-            "autism_score": best_autism_score,
+            "autism_suitability": best_autism_suitability,
             "used_ip_adapter": use_ip_adapter and self.ip_adapter_loaded,
             "progressive_improvement": progressive_improvement_applied,
             "final_prompt": current_prompt,
@@ -1591,7 +1447,7 @@ class AutismIntegratedCartoonPipeline:
             "prompt_history": prompt_history,
             "iterations_completed": len(score_progression)
         }
-    
+
     def get_pipeline_status(self):
         """Get comprehensive pipeline status including autism analyzer"""
         base_status = {
@@ -1610,7 +1466,7 @@ class AutismIntegratedCartoonPipeline:
         }
         
         return base_status
-    
+
     def reset_all_memory(self):
         """Reset all consistency memory and references"""
         if hasattr(self, 'consistency_manager'):
@@ -1619,7 +1475,7 @@ class AutismIntegratedCartoonPipeline:
         if hasattr(self, 'ip_adapter_manager') and self.ip_adapter_manager:
             self.ip_adapter_manager.reset_references()
         print("🔄 Reset all memory - ready for new storyboard")
-    
+
     def update_config(self, **config_updates):
         """Update pipeline configuration with autism considerations"""
         for key, value in config_updates.items():
@@ -1629,22 +1485,19 @@ class AutismIntegratedCartoonPipeline:
                 else:
                     self.config[key] = value
         
-        # Update IP-Adapter scale if it changed
         if "ip_adapter" in config_updates and "character_weight" in config_updates["ip_adapter"]:
             if self.ip_adapter_loaded and hasattr(self.pipe, 'set_ip_adapter_scale'):
                 new_scale = config_updates["ip_adapter"]["character_weight"]
-                # Validate scale for baked VAE compatibility
                 if not self.baked_vae_compatible and new_scale > 0.5:
                     print(f"⚠️ High IP-Adapter scale ({new_scale}) may cause issues with this baked VAE")
                 self.pipe.set_ip_adapter_scale(new_scale)
         
-        # Handle autism scoring toggle
         if "enable_autism_scoring" in config_updates:
             self.enable_autism_scoring = config_updates["enable_autism_scoring"]
             print(f"🧩 Autism scoring {'enabled' if self.enable_autism_scoring else 'disabled'}")
         
         print(f"🔧 Configuration updated: {config_updates}")
-    
+
     def save_autism_report(self, sequence_result, output_dir):
         """Save comprehensive autism suitability report"""
         import os
@@ -1655,7 +1508,6 @@ class AutismIntegratedCartoonPipeline:
             f.write("AUTISM STORYBOARD SUITABILITY REPORT\n")
             f.write("=" * 50 + "\n\n")
             
-            # Summary statistics
             if "autism_statistics" in sequence_result:
                 stats = sequence_result["autism_statistics"]
                 f.write("OVERALL AUTISM SUITABILITY:\n")
@@ -1663,17 +1515,15 @@ class AutismIntegratedCartoonPipeline:
                 f.write(f"Compliance Rate: {stats['compliance_rate']:.1%}\n")
                 f.write(f"Total Retries: {stats['total_retries']}\n\n")
             
-            # Frame-by-frame analysis
             f.write("FRAME-BY-FRAME ANALYSIS:\n")
             f.write("-" * 30 + "\n")
             
             for i, result in enumerate(sequence_result.get("sequence_results", [])):
                 f.write(f"\nFrame {i+1}:\n")
                 f.write(f"Prompt: {result['prompt']}\n")
-                f.write(f"Autism Score: {result.get('autism_score', 'N/A'):.3f}\n")
+                f.write(f"Autism Suitability: {result.get('autism_suitability', 'N/A'):.3f}\n")
                 f.write(f"Autism Grade: {result.get('autism_grade', 'Not evaluated')}\n")
                 
-                # Detailed metrics if available
                 if "autism_analysis" in result and result["autism_analysis"]:
                     analysis = result["autism_analysis"]
                     f.write("Key Metrics:\n")
@@ -1694,7 +1544,6 @@ class AutismIntegratedCartoonPipeline:
                         for rec in analysis["recommendations"][:3]:
                             f.write(f"  • {rec}\n")
             
-            # Common issues and recommendations
             if "autism_report" in sequence_result and sequence_result["autism_report"]:
                 report = sequence_result["autism_report"]
                 
@@ -1711,8 +1560,6 @@ class AutismIntegratedCartoonPipeline:
         print(f"📄 Autism suitability report saved: {report_path}")
         return report_path
 
-
-# Convenience function to create the pipeline
 def create_autism_integrated_pipeline(model_path, ip_adapter_path=None, enable_autism_scoring=True):
     """Convenience function to create autism-integrated pipeline"""
     return AutismIntegratedCartoonPipeline(
@@ -1721,14 +1568,11 @@ def create_autism_integrated_pipeline(model_path, ip_adapter_path=None, enable_a
         enable_autism_scoring=enable_autism_scoring
     )
 
-
-# Test function
 def test_autism_integration():
     """Test the autism-integrated pipeline"""
     print("🧪 Testing Autism-Integrated Pipeline")
     print("=" * 40)
     
-    # Create test pipeline (you'll need to provide actual paths)
     pipeline = create_autism_integrated_pipeline(
         model_path="path/to/your/model.safetensors",
         ip_adapter_path="path/to/ip-adapter_sdxl.bin",
@@ -1739,7 +1583,6 @@ def test_autism_integration():
         print("❌ Pipeline not available for testing")
         return
     
-    # Test single image generation
     print("\n📸 Testing single image generation with autism scoring...")
     result = pipeline.generate_single_image(
         prompt="young boy reading a book, simple room, clean background, cartoon style",
@@ -1748,11 +1591,10 @@ def test_autism_integration():
     
     if result:
         print(f"✅ Image generated successfully")
-        print(f"   Combined score: {result['score']:.3f}")
-        print(f"   Autism score: {result['autism_score']:.3f}")
+        print(f"   Selection score: {result['score']:.3f}")
+        print(f"   Autism suitability: {result['autism_suitability']:.3f}")
         print(f"   Autism grade: {result['autism_grade']}")
     
-    # Test autism-optimized storyboard
     print("\n📚 Testing autism-optimized storyboard generation...")
     test_prompts = [
         "young boy waking up in bed, simple bedroom, cartoon style",
@@ -1769,21 +1611,20 @@ def test_autism_integration():
     if storyboard_result:
         stats = storyboard_result["autism_statistics"]
         print(f"✅ Storyboard generated successfully")
-        print(f"   Average autism score: {stats['average_score']:.3f}")
+        print(f"   Average autism suitability: {stats['average_score']:.3f}")
         print(f"   Compliance rate: {stats['compliance_rate']:.1%}")
         print(f"   Total retries: {stats['total_retries']}")
     
     print("\n✅ Autism integration test complete!")
 
-
 if __name__ == "__main__":
     print("🎨 Autism-Integrated Cartoon Pipeline")
     print("📋 Features:")
-    print("   - Autism suitability scoring for every image")
-    print("   - Person count verification (max 2)")
-    print("   - Background simplicity analysis")
-    print("   - Sensory-friendly color evaluation")
-    print("   - Character clarity assessment")
-    print("   - Progressive prompt improvement with autism optimization")
-    print("   - Detailed autism suitability reports")
+    print(" - Autism suitability scoring for every image")
+    print(" - Person count verification (max 2)")
+    print(" - Background simplicity analysis")
+    print(" - Sensory-friendly color evaluation")
+    print(" - Character clarity assessment")
+    print(" - Progressive prompt improvement with autism optimization")
+    print(" - Detailed autism suitability reports")
     print("\n🚀 Ready for autism-friendly storyboard generation!")

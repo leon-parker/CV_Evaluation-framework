@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-07-23T15:20:32.573969",
+  "overall_success_rate": 0.8333333333333334,
+  "tests": [
+    {
+      "name": "Basic Functionality",
+      "passed": true
+    },
+    {
+      "name": "Person Counting",
+      "passed": true
+    },
+    {
+      "name": "Background Scoring",
+      "passed": 

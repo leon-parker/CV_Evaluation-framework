@@ -1,0 +1,20 @@
+STORYBOARD SEQUENCE VALIDATION REPORT
+==================================================
+
+Scenario: Simple Girl Story
+Character: Emma (blonde hair, red dress)
+IP-Adapter: Disabled
+Sequence Length: 0 frames
+Generated: 2025-07-23 15:05:26
+
+FRAME-BY-FRAME ANALYSIS:
+------------------------------
+
+SEQUENCE-LEVEL ANALYSIS:
+-------------------------
+
+Error: No images evaluated in sequence
+VALIDATION:
+----------
+Expected: High consistency with IP-Adapter, degrading without
+Actual: ❓ Insufficient data for validation

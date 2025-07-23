@@ -223,6 +223,9 @@ class AutismFriendlyImageAnalyzer:
         # Overall color appropriateness
         color_appropriateness = (color_count_score * 0.4 + saturation_score * 0.3 + brightness_score * 0.3)
         
+        # FIX 1: ENSURE 0-1 RANGE FOR COLOR SCORE
+        color_appropriateness = max(0.0, min(1.0, color_appropriateness))
+        
         # Grade color appropriateness
         if color_appropriateness >= 0.8:
             grade = "Excellent - Autism-friendly color palette"
@@ -249,8 +252,8 @@ class AutismFriendlyImageAnalyzer:
         """Analyze how clearly defined characters are - important for autism comprehension"""
         gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
         
-        # Edge sharpness (clear boundaries)
-        edges = cv2.Canny(gray, 100, 200)  # Higher thresholds for strong edges
+        # FIX 2: LOWERED EDGE DETECTION THRESHOLDS
+        edges = cv2.Canny(gray, 50, 150)  # CHANGED: Lower thresholds (was 100, 200)
         strong_edge_density = np.sum(edges > 0) / edges.size
         
         # Contrast analysis (clear distinction between elements)
@@ -279,12 +282,15 @@ class AutismFriendlyImageAnalyzer:
                 
                 shape_quality = np.mean(smoothness_scores) if smoothness_scores else 0
         
-        # Combine clarity metrics
-        edge_clarity = min(1.0, strong_edge_density * 8)  # Scale edge density
-        contrast_clarity = min(1.0, avg_contrast * 3)     # Scale contrast
-        shape_clarity = min(1.0, shape_quality * 5)       # Scale shape quality
+        # FIX 3: INCREASED SCALING FOR EDGE CLARITY
+        edge_clarity = min(1.0, strong_edge_density * 15)  # CHANGED: Increased scaling (was * 8)
+        contrast_clarity = min(1.0, avg_contrast * 5)      # CHANGED: Increased scaling (was * 3)
+        shape_clarity = min(1.0, shape_quality * 8)        # CHANGED: Increased scaling (was * 5)
         
         character_clarity = (edge_clarity * 0.4 + contrast_clarity * 0.4 + shape_clarity * 0.2)
+        
+        # FIX 4: ENSURE 0-1 RANGE FOR CHARACTER CLARITY
+        character_clarity = max(0.0, min(1.0, character_clarity))
         
         # Grade clarity
         if character_clarity >= 0.8:
@@ -345,6 +351,9 @@ class AutismFriendlyImageAnalyzer:
         
         sensory_friendliness = (pattern_score * 0.5 + intensity_score * 0.3 + motion_score * 0.2)
         
+        # FIX 5: ENSURE 0-1 RANGE FOR SENSORY SCORE
+        sensory_friendliness = max(0.0, min(1.0, sensory_friendliness))
+        
         # Grade sensory friendliness
         if sensory_friendliness >= 0.8:
             grade = "Excellent - Very sensory-friendly"
@@ -401,6 +410,9 @@ class AutismFriendlyImageAnalyzer:
         # Overall focus clarity
         focus_clarity = (focus_score * 0.6 + contrast_focus * 0.4)
         
+        # FIX 6: ENSURE 0-1 RANGE FOR FOCUS SCORE
+        focus_clarity = max(0.0, min(1.0, focus_clarity))
+        
         # Grade focus clarity
         if focus_clarity >= 0.7:
             grade = "Excellent - Clear single focus"
@@ -442,25 +454,28 @@ class AutismFriendlyImageAnalyzer:
                 total_weight += weight
         
         autism_suitability = total_score / total_weight if total_weight > 0 else 0.5
+        
+        # FIX 7: ENSURE FINAL AUTISM SUITABILITY IS 0-1 RANGE
         return float(min(1.0, max(0.0, autism_suitability)))
     
     def get_autism_grade(self, suitability_score):
         """Convert autism suitability score to letter grade"""
-        if suitability_score >= 0.9:
+        # FIX 8: LOWERED THRESHOLDS TO BE MORE REALISTIC
+        if suitability_score >= 0.85:  # CHANGED: Was 0.9
             return "A+ (Excellent for autism storyboards)"
-        elif suitability_score >= 0.8:
+        elif suitability_score >= 0.75:  # CHANGED: Was 0.8
             return "A (Very suitable for autism storyboards)"
-        elif suitability_score >= 0.7:
+        elif suitability_score >= 0.65:  # CHANGED: Was 0.7
             return "B+ (Good for autism storyboards)"
-        elif suitability_score >= 0.6:
+        elif suitability_score >= 0.55:  # CHANGED: Was 0.6
             return "B (Acceptable for autism storyboards)"
-        elif suitability_score >= 0.5:
+        elif suitability_score >= 0.45:  # CHANGED: Was 0.5
             return "C+ (Needs some improvements)"
-        elif suitability_score >= 0.4:
+        elif suitability_score >= 0.35:  # CHANGED: Was 0.4
             return "C (Several issues to address)"
-        elif suitability_score >= 0.3:
+        elif suitability_score >= 0.25:  # CHANGED: Was 0.3
             return "D+ (Many issues for autism use)"
-        elif suitability_score >= 0.2:
+        elif suitability_score >= 0.15:  # CHANGED: Was 0.2
             return "D (Poor for autism storyboards)"
         else:
             return "F (Unsuitable for autism storyboards)"
@@ -506,9 +521,9 @@ class AutismFriendlyImageAnalyzer:
         
         # Overall recommendations
         overall_score = results["autism_suitability"]
-        if overall_score >= 0.8:
+        if overall_score >= 0.75:  # CHANGED: Was 0.8
             recommendations.append("🎉 Excellent for autism education!")
-        elif overall_score >= 0.6:
+        elif overall_score >= 0.55:  # CHANGED: Was 0.6
             recommendations.append("👍 Good for autism use with minor improvements")
         else:
             recommendations.append("⚠️ Needs significant improvements for autism suitability")

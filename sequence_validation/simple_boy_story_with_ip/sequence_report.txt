@@ -1,0 +1,20 @@
+STORYBOARD SEQUENCE VALIDATION REPORT
+==================================================
+
+Scenario: Simple Boy Story
+Character: Alex (brown hair, blue shirt)
+IP-Adapter: Enabled
+Sequence Length: 0 frames
+Generated: 2025-07-23 15:05:12
+
+FRAME-BY-FRAME ANALYSIS:
+------------------------------
+
+SEQUENCE-LEVEL ANALYSIS:
+-------------------------
+
+Error: No images evaluated in sequence
+VALIDATION:
+----------
+Expected: High consistency with IP-Adapter, degrading without
+Actual: ❓ Insufficient data for validation

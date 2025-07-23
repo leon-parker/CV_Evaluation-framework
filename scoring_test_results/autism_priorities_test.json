@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Ideal (single person, clean)",
+    "autism_score": 0.8840032352939071,
+    "person_count": 1,
+    "bg_score": 0.9789999999991579,
+    "expected_high": true
+  },
+  {
+    "name": "01_simple_single_annotated.png",
+    "autism_score": 0.7618088374844152,
+    "person_count": 1,
+    "person_compliant": true,
+    "grade": "B+ (Good for autism storyboards)"
+  },
+  {
+    "name": "01_simple_single_clean.png",
+    "autism_score": 0.776265370715262,
+    "person_count": 1,
+    "person_compliant": true,
+    "grade": "B+ (Good for autism storyboards)"
+  },
+  {
+    "name": "01_simple_single_generated.png",
+    "autism_score": 0.776265370715262,
+    "person_count": 1,
+    "person_compliant": true,
+    "grade": "B+ (Good for autism storyboards)"
+  }
+]
