@@ -1,345 +1,360 @@
+#!/usr/bin/env python3
 """
-Shared utilities for the autism evaluation framework
-Includes image processing, report generation, and visualization tools
+Test the Autism Storyboard Evaluation Framework using RealCartoon XL v7 generated images
+Generates test images and evaluates them with the framework
 """
 
 import os
-import json
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from PIL import Image, ImageDraw, ImageFont
-from pathlib import Path
-from datetime import datetime
-import cv2
+import torch
+import gc
+from PIL import Image
+from diffusers import StableDiffusionXLPipeline, EulerAncestralDiscreteScheduler
+from compel import Compel, ReturnedEmbeddingsType
+import sys
 
+# Add current directory to path for autism evaluation framework
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-class ImageUtils:
-    """Image processing and manipulation utilities"""
-    
-    @staticmethod
-    def load_image(image_path):
-        """Load image from various formats"""
-        if isinstance(image_path, str) or isinstance(image_path, Path):
-            return Image.open(image_path).convert('RGB')
-        elif isinstance(image_path, Image.Image):
-            return image_path.convert('RGB')
-        elif isinstance(image_path, np.ndarray):
-            return Image.fromarray(image_path).convert('RGB')
-        else:
-            raise ValueError(f"Unsupported image type: {type(image_path)}")
-    
-    @staticmethod
-    def resize_for_display(image, max_size=(800, 800)):
-        """Resize image for display while maintaining aspect ratio"""
-        image.thumbnail(max_size, Image.Resampling.LANCZOS)
-        return image
-    
-    @staticmethod
-    def create_image_grid(images, grid_size=None, padding=10):
-        """Create a grid of images for comparison"""
-        n_images = len(images)
-        
-        if grid_size is None:
-            cols = int(np.ceil(np.sqrt(n_images)))
-            rows = int(np.ceil(n_images / cols))
-        else:
-            rows, cols = grid_size
-        
-        # Ensure all images are same size
-        max_width = max(img.width for img in images)
-        max_height = max(img.height for img in images)
-        
-        # Create grid
-        grid_width = cols * max_width + (cols + 1) * padding
-        grid_height = rows * max_height + (rows + 1) * padding
-        
-        grid = Image.new('RGB', (grid_width, grid_height), color='white')
-        
-        for idx, img in enumerate(images):
-            row = idx // cols
-            col = idx % cols
-            
-            x = col * max_width + (col + 1) * padding
-            y = row * max_height + (row + 1) * padding
-            
-            grid.paste(img, (x, y))
-        
-        return grid
+# Test imports first
+print("🔍 Checking autism evaluation framework imports...")
+try:
+    from autism_evaluator import AutismStoryboardEvaluator
+    from cv_metrics import VisualQualityAnalyzer
+    from complexity_metrics import AutismComplexityAnalyzer
+    from evaluation_config import AUTISM_EVALUATION_WEIGHTS
+    print("✅ All framework modules imported successfully!")
+    FRAMEWORK_AVAILABLE = True
+except ImportError as e:
+    print(f"❌ Framework import failed: {e}")
+    print("Make sure all framework files are in the same directory as this script:")
+    print("- autism_evaluator.py")
+    print("- cv_metrics.py") 
+    print("- complexity_metrics.py")
+    print("- prompt_metrics.py")
+    print("- consistency_metrics.py")
+    print("- utils.py")
+    print("- evaluation_config.py")
+    FRAMEWORK_AVAILABLE = False
 
-
-class ReportGenerator:
-    """Generate evaluation reports in various formats"""
+def find_realcartoon_model():
+    """Find the RealCartoon XL v7 model"""
+    paths = [
+        "../models/realcartoonxl_v7.safetensors",
+        "models/realcartoonxl_v7.safetensors", 
+        "../models/RealCartoon-XL-v7.safetensors",
+        "realcartoonxl_v7.safetensors",
+        "RealCartoon-XL-v7.safetensors"
+    ]
     
-    @staticmethod
-    def generate_text_report(results, save_path=None):
-        """Generate detailed text report"""
-        report = []
-        report.append("AUTISM STORYBOARD EVALUATION REPORT")
-        report.append("=" * 60)
-        report.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        report.append("")
-        
-        # Overall scores
-        report.append("OVERALL ASSESSMENT")
-        report.append("-" * 30)
-        report.append(f"Combined Autism Score: {results['combined_score']:.3f}")
-        report.append(f"Grade: {results['autism_grade']}")
-        report.append(f"Image: {results.get('image_name', 'N/A')}")
-        report.append(f"Prompt: {results.get('prompt', 'N/A')}")
-        report.append("")
-        
-        # Individual metrics
-        report.append("DETAILED METRICS")
-        report.append("-" * 30)
-        
-        scores = results.get('scores', {})
-        for metric, score in scores.items():
-            report.append(f"{metric.replace('_', ' ').title()}: {score:.3f}")
-        
-        report.append("")
-        
-        # Autism-specific analysis
-        if 'metrics' in results and 'complexity' in results['metrics']:
-            complexity = results['metrics']['complexity']
-            
-            report.append("AUTISM-SPECIFIC ANALYSIS")
-            report.append("-" * 30)
-            
-            # Person count
-            person_data = complexity.get('person_count', {})
-            report.append(f"Person Count: {person_data.get('count', 'N/A')} "
-                         f"({'✓' if person_data.get('is_compliant') else '✗'})")
-            
-            # Background
-            bg_data = complexity.get('background_simplicity', {})
-            report.append(f"Background Simplicity: {bg_data.get('score', 0):.3f} "
-                         f"({'Simple' if bg_data.get('is_simple') else 'Complex'})")
-            
-            # Colors
-            color_data = complexity.get('color_appropriateness', {})
-            report.append(f"Color Count: {color_data.get('dominant_colors', 'N/A')} colors")
-            report.append(f"Color Appropriateness: {color_data.get('score', 0):.3f}")
-            
-            report.append("")
-        
-        # Recommendations
-        report.append("RECOMMENDATIONS")
-        report.append("-" * 30)
-        for i, rec in enumerate(results.get('recommendations', []), 1):
-            report.append(f"{i}. {rec}")
-        
-        # Save if requested
-        if save_path:
-            with open(save_path, 'w', encoding='utf-8') as f:
-                f.write('\n'.join(report))
-        
-        return '\n'.join(report)
+    for path in paths:
+        if os.path.exists(path):
+            return path
     
-    @staticmethod
-    def generate_json_report(results, save_path):
-        """Save results as JSON for further analysis"""
-        # Convert numpy types to Python types
-        def convert_types(obj):
-            if isinstance(obj, np.ndarray):
-                return obj.tolist()
-            elif isinstance(obj, (np.float32, np.float64)):
-                return float(obj)
-            elif isinstance(obj, (np.int32, np.int64)):
-                return int(obj)
-            elif isinstance(obj, (np.bool_, bool)):
-                return bool(obj)
-            elif isinstance(obj, dict):
-                return {key: convert_types(value) for key, value in obj.items()}
-            elif isinstance(obj, list):
-                return [convert_types(item) for item in obj]
-            return obj
-        
-        clean_results = convert_types(results)
-        
-        with open(save_path, 'w', encoding='utf-8') as f:
-            json.dump(clean_results, f, indent=2)
-        
-        return save_path
-
-
-class VisualizationTools:
-    """Create visual reports and comparisons"""
+    # If not found, ask user
+    print("RealCartoon XL v7 model not found in common locations.")
+    user_path = input("Enter the full path to realcartoonxl_v7.safetensors: ").strip()
+    if os.path.exists(user_path):
+        return user_path
     
-    @staticmethod
-    def create_evaluation_dashboard(results, image, save_path=None):
-        """Create a visual dashboard of evaluation results"""
-        fig = plt.figure(figsize=(16, 10))
-        gs = fig.add_gridspec(3, 4, hspace=0.3, wspace=0.3)
+    return None
+
+class RealCartoonGenerator:
+    """Simple generator using RealCartoon XL v7"""
+    
+    def __init__(self, model_path, device="cuda"):
+        self.model_path = model_path
+        self.device = device
+        self.pipeline = None
+        self.compel = None
         
-        # Display image
-        ax_img = fig.add_subplot(gs[0:2, 0:2])
-        if isinstance(image, str):
-            image = Image.open(image)
-        ax_img.imshow(image)
-        ax_img.axis('off')
-        ax_img.set_title(f"Evaluated Image\nGrade: {results['autism_grade']}", 
-                        fontsize=14, fontweight='bold')
-        
-        # Overall score gauge
-        ax_gauge = fig.add_subplot(gs[0, 2])
-        VisualizationTools._create_gauge_chart(
-            ax_gauge, 
-            results['combined_score'], 
-            "Autism Score"
+    def setup(self):
+        """Setup the pipeline"""
+        try:
+            print("🚀 Setting up RealCartoon XL v7...")
+            
+            self.pipeline = StableDiffusionXLPipeline.from_single_file(
+                self.model_path,
+                torch_dtype=torch.float16,
+                use_safetensors=True,
+                safety_checker=None,
+                requires_safety_checker=False
+            ).to(self.device)
+            
+            self.pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(
+                self.pipeline.scheduler.config
+            )
+            
+            self.pipeline.enable_vae_tiling()
+            self.pipeline.enable_model_cpu_offload()
+            
+            self.compel = Compel(
+                tokenizer=[self.pipeline.tokenizer, self.pipeline.tokenizer_2],
+                text_encoder=[self.pipeline.text_encoder, self.pipeline.text_encoder_2],
+                returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
+                requires_pooled=[False, True],
+                truncate_long_prompts=False
+            )
+            
+            print("✅ Pipeline ready!")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Setup failed: {e}")
+            return False
+    
+    def generate(self, prompt, negative_prompt, seed=42):
+        """Generate an image"""
+        try:
+            # Encode prompts
+            positive_conditioning, positive_pooled = self.compel(prompt)
+            negative_conditioning, negative_pooled = self.compel(negative_prompt)
+            
+            [positive_conditioning, negative_conditioning] = self.compel.pad_conditioning_tensors_to_same_length(
+                [positive_conditioning, negative_conditioning]
+            )
+            
+            result = self.pipeline(
+                prompt_embeds=positive_conditioning,
+                pooled_prompt_embeds=positive_pooled,
+                negative_prompt_embeds=negative_conditioning,
+                negative_pooled_prompt_embeds=negative_pooled,
+                num_inference_steps=25,
+                guidance_scale=8.0,
+                height=1024,
+                width=1024,
+                generator=torch.Generator(self.device).manual_seed(seed)
+            )
+            
+            gc.collect()
+            return result.images[0] if result and result.images else None
+            
+        except Exception as e:
+            print(f"Generation failed: {e}")
+            return None
+    
+    def cleanup(self):
+        """Clean up resources"""
+        if self.pipeline:
+            del self.pipeline
+        if self.compel:
+            del self.compel
+        torch.cuda.empty_cache()
+        gc.collect()
+
+def generate_test_images():
+    """Generate test images using RealCartoon XL v7"""
+    
+    model_path = find_realcartoon_model()
+    if not model_path:
+        print("❌ Cannot find RealCartoon XL v7 model!")
+        return None
+    
+    print(f"📁 Using model: {model_path}")
+    
+    # Create output directory
+    test_dir = "autism_framework_test"
+    os.makedirs(test_dir, exist_ok=True)
+    
+    generator = RealCartoonGenerator(model_path)
+    if not generator.setup():
+        return None
+    
+    test_cases = []
+    
+    try:
+        # Test Case 1: GOOD - Single character, simple scene
+        print("\n🎨 Generating GOOD test image (should score HIGH)...")
+        good_prompt = (
+            "cartoon illustration of one happy young boy brushing teeth with toothbrush, "
+            "simple white bathroom background, clean cartoon style, bright lighting, "
+            "minimal objects, clear character"
+        )
+        good_negative = (
+            "multiple people, complex background, realistic photo, cluttered, "
+            "too many objects, dark, scary, adults, crowd"
         )
         
-        # Metric breakdown
-        ax_metrics = fig.add_subplot(gs[1, 2:4])
-        scores = results.get('scores', {})
-        if scores:
-            metrics = list(scores.keys())
-            values = list(scores.values())
-            
-            y_pos = np.arange(len(metrics))
-            colors = ['green' if v >= 0.7 else 'orange' if v >= 0.5 else 'red' 
-                     for v in values]
-            
-            bars = ax_metrics.barh(y_pos, values, color=colors, alpha=0.7)
-            ax_metrics.set_yticks(y_pos)
-            ax_metrics.set_yticklabels([m.replace('_', ' ').title() for m in metrics])
-            ax_metrics.set_xlabel('Score')
-            ax_metrics.set_xlim(0, 1)
-            ax_metrics.set_title('Metric Breakdown', fontweight='bold')
-            ax_metrics.grid(axis='x', alpha=0.3)
-            
-            # Add value labels
-            for bar, value in zip(bars, values):
-                ax_metrics.text(value + 0.01, bar.get_y() + bar.get_height()/2, 
-                               f'{value:.2f}', va='center')
+        good_image = generator.generate(good_prompt, good_negative, seed=12345)
+        if good_image:
+            good_path = os.path.join(test_dir, "good_single_character.png")
+            good_image.save(good_path)
+            test_cases.append({
+                "name": "Good Single Character",
+                "path": good_path,
+                "prompt": good_prompt,
+                "expected": "HIGH score (0.8+) - autism appropriate"
+            })
+            print(f"✅ Saved: {good_path}")
         
-        # Autism-specific details
-        ax_details = fig.add_subplot(gs[2, :])
-        details_text = VisualizationTools._format_autism_details(results)
-        ax_details.text(0.05, 0.95, details_text, transform=ax_details.transAxes,
-                       verticalalignment='top', fontfamily='monospace',
-                       bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-        ax_details.axis('off')
+        # Test Case 2: BAD - Multiple people, complex scene  
+        print("\n🎨 Generating BAD test image (should score LOW)...")
+        bad_prompt = (
+            "realistic photo of busy classroom with five children and two teachers, "
+            "complex detailed background with many books, papers, toys, posters, "
+            "crowded scene with lots of activity and objects everywhere"
+        )
+        bad_negative = (
+            "simple, cartoon, clean, minimal, single person, empty background"
+        )
         
-        plt.suptitle('Autism Storyboard Evaluation Dashboard', 
-                    fontsize=16, fontweight='bold')
+        bad_image = generator.generate(bad_prompt, bad_negative, seed=67890)
+        if bad_image:
+            bad_path = os.path.join(test_dir, "bad_complex_scene.png")
+            bad_image.save(bad_path)
+            test_cases.append({
+                "name": "Bad Complex Scene", 
+                "path": bad_path,
+                "prompt": bad_prompt,
+                "expected": "LOW score (0.5-) - too complex for autism"
+            })
+            print(f"✅ Saved: {bad_path}")
         
-        if save_path:
-            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        # Test Case 3: MEDIUM - Single character but more complex
+        print("\n🎨 Generating MEDIUM test image (should score MEDIUM)...")
+        medium_prompt = (
+            "cartoon boy eating breakfast at kitchen table, "
+            "some kitchen items visible, cartoon style, "
+            "one character, moderate detail"
+        )
+        medium_negative = (
+            "multiple people, very complex, realistic photo, cluttered"
+        )
         
-        return fig
+        medium_image = generator.generate(medium_prompt, medium_negative, seed=11111)
+        if medium_image:
+            medium_path = os.path.join(test_dir, "medium_breakfast.png")
+            medium_image.save(medium_path)
+            test_cases.append({
+                "name": "Medium Complexity",
+                "path": medium_path, 
+                "prompt": medium_prompt,
+                "expected": "MEDIUM score (0.6-0.8) - acceptable but could improve"
+            })
+            print(f"✅ Saved: {medium_path}")
+        
+        return test_cases
+        
+    finally:
+        generator.cleanup()
+
+def test_evaluation_framework(test_cases):
+    """Test the autism evaluation framework on generated images"""
     
-    @staticmethod
-    def _create_gauge_chart(ax, value, title):
-        """Create a gauge/speedometer chart"""
-        # Create semicircle
-        theta = np.linspace(0, np.pi, 100)
-        radius = 1
-        
-        # Color zones
-        colors = ['red', 'orange', 'yellow', 'lightgreen', 'green']
-        zone_boundaries = [0, 0.4, 0.55, 0.7, 0.85, 1.0]
-        
-        for i in range(len(colors)):
-            start_angle = zone_boundaries[i] * np.pi
-            end_angle = zone_boundaries[i+1] * np.pi
-            theta_zone = np.linspace(start_angle, end_angle, 20)
-            
-            x_outer = radius * np.cos(theta_zone)
-            y_outer = radius * np.sin(theta_zone)
-            x_inner = 0.7 * radius * np.cos(theta_zone)
-            y_inner = 0.7 * radius * np.sin(theta_zone)
-            
-            vertices = list(zip(x_outer, y_outer)) + list(zip(x_inner[::-1], y_inner[::-1]))
-            poly = plt.Polygon(vertices, color=colors[i], alpha=0.7)
-            ax.add_patch(poly)
-        
-        # Add needle
-        needle_angle = value * np.pi
-        needle_x = 0.9 * radius * np.cos(needle_angle)
-        needle_y = 0.9 * radius * np.sin(needle_angle)
-        ax.plot([0, needle_x], [0, needle_y], 'k-', linewidth=3)
-        ax.plot(0, 0, 'ko', markersize=10)
-        
-        # Formatting
-        ax.set_xlim(-1.2, 1.2)
-        ax.set_ylim(-0.1, 1.2)
-        ax.set_aspect('equal')
-        ax.axis('off')
-        ax.text(0, -0.2, f'{value:.2f}', ha='center', fontsize=16, fontweight='bold')
-        ax.set_title(title, fontsize=12, fontweight='bold', pad=20)
+    if not test_cases:
+        print("❌ No test images to evaluate!")
+        return
     
-    @staticmethod
-    def _format_autism_details(results):
-        """Format autism-specific details for display"""
-        details = []
-        
-        if 'metrics' in results and 'complexity' in results['metrics']:
-            complexity = results['metrics']['complexity']
-            
-            # Person count
-            person_count = complexity.get('person_count', {}).get('count', 'N/A')
-            details.append(f"People in image: {person_count}")
-            
-            # Background
-            bg_objects = complexity.get('background_simplicity', {}).get('object_count', 'N/A')
-            details.append(f"Background objects: {bg_objects}")
-            
-            # Colors
-            color_count = complexity.get('color_appropriateness', {}).get('dominant_colors', 'N/A')
-            details.append(f"Dominant colors: {color_count}")
-            
-            # Key recommendations
-            details.append("\nTop Recommendations:")
-            for rec in results.get('recommendations', [])[:3]:
-                details.append(f"• {rec}")
-        
-        return '\n'.join(details)
+    if not FRAMEWORK_AVAILABLE:
+        print("❌ Autism evaluation framework not available - cannot test!")
+        return
     
-    @staticmethod
-    def create_sequence_comparison(sequence_results, save_path=None):
-        """Create visual comparison for sequence evaluation"""
-        n_images = sequence_results['num_images']
+    try:
+        from autism_evaluator import AutismStoryboardEvaluator
         
-        fig, axes = plt.subplots(2, n_images, figsize=(4*n_images, 8))
-        if n_images == 1:
-            axes = axes.reshape(2, 1)
+        print("\n" + "="*70)
+        print("🧩 TESTING AUTISM EVALUATION FRAMEWORK")
+        print("="*70)
         
-        # Display images and scores
-        for i, img_result in enumerate(sequence_results['image_results']):
-            # Image
-            ax_img = axes[0, i]
-            # Note: Would need actual image data here
-            ax_img.text(0.5, 0.5, f"Image {i+1}", ha='center', va='center')
-            ax_img.set_title(f"Score: {img_result['combined_score']:.2f}")
-            ax_img.axis('off')
+        # Initialize evaluator
+        print("\n🚀 Initializing evaluator...")
+        evaluator = AutismStoryboardEvaluator(verbose=True)
+        
+        results = []
+        
+        # Evaluate each test case
+        for i, test_case in enumerate(test_cases, 1):
+            print(f"\n📊 EVALUATING {i}/{len(test_cases)}: {test_case['name']}")
+            print("-" * 50)
+            print(f"Expected: {test_case['expected']}")
             
-            # Metrics bar
-            ax_bar = axes[1, i]
-            metrics = ['Visual', 'Prompt', 'Person', 'Background', 'Color']
-            scores = [
-                img_result['scores'].get('visual_quality', 0),
-                img_result['scores'].get('prompt_faithfulness', 0),
-                img_result['scores'].get('person_count', 0),
-                img_result['scores'].get('background_simplicity', 0),
-                img_result['scores'].get('color_appropriateness', 0)
-            ]
+            # Run evaluation
+            result = evaluator.evaluate_single_image(
+                image=test_case['path'],
+                prompt=test_case['prompt'],
+                save_report=True,
+                output_dir="evaluation_results"
+            )
             
-            colors = ['green' if s >= 0.7 else 'orange' if s >= 0.5 else 'red' 
-                     for s in scores]
-            ax_bar.bar(metrics, scores, color=colors, alpha=0.7)
-            ax_bar.set_ylim(0, 1)
-            ax_bar.set_ylabel('Score')
-            ax_bar.tick_params(axis='x', rotation=45)
+            # Store results
+            test_case['result'] = result
+            results.append(test_case)
+            
+            print(f"\n📈 RESULTS:")
+            print(f"   Score: {result['combined_score']:.3f}")
+            print(f"   Grade: {result['autism_grade']}")
+            
+            # Show key metrics
+            if 'complexity' in result['metrics']:
+                complexity = result['metrics']['complexity']
+                person_count = complexity['person_count']['count']
+                bg_score = complexity['background_simplicity']['score']
+                print(f"   People: {person_count}")
+                print(f"   Background simplicity: {bg_score:.3f}")
+            
+            print(f"   Top recommendation: {result['recommendations'][0] if result['recommendations'] else 'None'}")
         
-        plt.suptitle(f"Storyboard Sequence Evaluation\n"
-                    f"Overall Score: {sequence_results['overall_score']:.2f} "
-                    f"({sequence_results['overall_grade']})",
-                    fontsize=14, fontweight='bold')
+        # Summary
+        print("\n" + "="*70)
+        print("📋 EVALUATION SUMMARY")
+        print("="*70)
         
-        plt.tight_layout()
+        print(f"{'Test Case':<20} {'Score':<8} {'Grade':<15} {'Expected'}")
+        print("-" * 70)
         
-        if save_path:
-            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        for test_case in results:
+            name = test_case['name'][:19]
+            score = test_case['result']['combined_score']
+            grade = test_case['result']['autism_grade'][:14]
+            expected = test_case['expected'][:30]
+            print(f"{name:<20} {score:<8.3f} {grade:<15} {expected}")
         
-        return fig
+        # Validation
+        print(f"\n🔍 VALIDATION:")
+        if len(results) >= 2:
+            good_score = results[0]['result']['combined_score']  # Should be highest
+            bad_score = results[1]['result']['combined_score']   # Should be lowest
+            
+            print(f"   Good image ({good_score:.3f}) > Bad image ({bad_score:.3f}): {good_score > bad_score}")
+            
+            if good_score > bad_score:
+                print("   ✅ Framework correctly distinguishes autism-appropriate vs inappropriate!")
+            else:
+                print("   ⚠️ Framework may need calibration")
+        
+        print(f"\n📁 Detailed reports saved in: evaluation_results/")
+        print("✅ Framework testing complete!")
+        
+    except ImportError as e:
+        print(f"❌ Cannot import evaluation framework: {e}")
+        print("Make sure all framework files are in the same directory")
+    except Exception as e:
+        print(f"❌ Evaluation failed: {e}")
+        import traceback
+        traceback.print_exc()
+
+def main():
+    """Main function"""
+    print("🧩 AUTISM EVALUATION FRAMEWORK TEST WITH REALCARTOON XL v7")
+    print("="*70)
+    print("This script will:")
+    print("1. Generate test images using RealCartoon XL v7")
+    print("2. Evaluate them with the autism framework")
+    print("3. Validate the scoring works correctly")
+    print("="*70)
+    
+    # Step 1: Generate test images
+    print("\n🎨 STEP 1: GENERATING TEST IMAGES...")
+    test_cases = generate_test_images()
+    
+    if not test_cases:
+        print("❌ Failed to generate test images!")
+        return
+    
+    print(f"✅ Generated {len(test_cases)} test images")
+    
+    # Step 2: Test evaluation framework
+    print("\n🧩 STEP 2: TESTING EVALUATION FRAMEWORK...")
+    test_evaluation_framework(test_cases)
+
+if __name__ == "__main__":
+    main()

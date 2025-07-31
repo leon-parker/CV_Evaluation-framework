@@ -147,11 +147,32 @@ class ReportGenerator:
                 return float(obj)
             elif isinstance(obj, (np.int32, np.int64)):
                 return int(obj)
+            elif isinstance(obj, (np.bool_, bool)):
+                return bool(obj)
             elif isinstance(obj, dict):
                 return {key: convert_types(value) for key, value in obj.items()}
             elif isinstance(obj, list):
                 return [convert_types(item) for item in obj]
-            return obj
+            elif obj is None:
+                return None
+            elif isinstance(obj, (str, int, float)):
+                return obj
+            else:
+                # Handle any other problematic types
+                try:
+                    # Try to convert to basic Python type
+                    if hasattr(obj, 'item'):  # numpy scalars
+                        return obj.item()
+                    elif hasattr(obj, '__float__'):
+                        return float(obj)
+                    elif hasattr(obj, '__int__'):
+                        return int(obj)
+                    elif hasattr(obj, '__str__'):
+                        return str(obj)
+                    else:
+                        return str(obj)
+                except:
+                    return str(obj)
         
         clean_results = convert_types(results)
         
