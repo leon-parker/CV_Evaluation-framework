@@ -1,0 +1,26 @@
+{
+  "image_name": "evaluated_image",
+  "prompt": "one cartoon boy standing in simple outdoor scene",
+  "metrics": {
+    "visual_quality": {
+      "quality_score": 0.95,
+      "metrics": {
+        "laplacian_variance": 471.15509033203125,
+        "gradient_magnitude": 7.179821903236491,
+        "edge_density": 0.005397796630859375,
+        "multi_scale_sharpness_mean": 168.7292938232422,
+        "is_blurry": false,
+        "mean_brightness": 223.4156036376953,
+        "core_dynamic_range": 50.0,
+        "bright_pixel_ratio": 0.9652557373046875,
+        "dark_pixel_ratio": 0.00450897216796875,
+        "is_overexposed": false,
+        "is_underexposed": false,
+        "mad_noise": 0.0,
+        "gaussian_noise": 5.386783599853516,
+        "noise_variation": 5.548496246337891,
+        "is_noisy": false,
+        "rms_contrast": 21.290373017014645,
+        "local_contrast_mean": 1.5978153944015503,
+        "has_low_contrast": false,
+        "has_compression_artifacts": 

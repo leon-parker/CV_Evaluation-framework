@@ -1,0 +1,33 @@
+AUTISM STORYBOARD EVALUATION REPORT
+============================================================
+Generated: 2025-07-31 20:37:08
+
+OVERALL ASSESSMENT
+------------------------------
+Combined Autism Score: 0.830
+Grade: B+ (Good for autism education)
+Image: evaluated_image
+Prompt: one cartoon boy standing in simple outdoor scene
+
+DETAILED METRICS
+------------------------------
+Visual Quality: 0.950
+Prompt Faithfulness: 0.920
+Person Count: 1.000
+Background Simplicity: 0.945
+Color Appropriateness: 0.623
+Character Clarity: 0.324
+Sensory Friendliness: 0.337
+
+AUTISM-SPECIFIC ANALYSIS
+------------------------------
+Person Count: 0 (✓)
+Background Simplicity: 0.945 (Simple)
+Color Count: 1 colors
+Color Appropriateness: 0.623
+
+RECOMMENDATIONS
+------------------------------
+1. ✅ Good foundation - apply recommendations for excellence
+2. 👤 Add clear main character to scene
+3. ✏️ Improve character definition: clearer outlines
