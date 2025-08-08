@@ -122,11 +122,11 @@ class AutismComplexityAnalyzer:
         
         # Calculate compliance and scoring
         is_compliant = final_count <= 2
-        compliance_level = "Excellent" if final_count <= 1 else "Good" if final_count == 2 else "Poor"
+        compliance_level = "Excellent" if final_count <= 2 else "Poor"
         
-        # Enhanced scoring with stronger penalties for too many people
+        # FIXED: Both 1 and 2 people get perfect score
         if final_count <= 2:
-            score = 1.0 if final_count <= 1 else 0.8
+            score = 1.0  # Both 1 and 2 people are perfect for autism
         else:
             score = max(0.0, 1.0 - (final_count - 2) * 0.25)
         
@@ -818,9 +818,9 @@ class AutismComplexityAnalyzer:
         # Apply bonus/penalty modifiers
         person_count = results["person_count"]["count"]
         
-        # Bonus for ideal person count
-        if person_count == 1:
-            autism_suitability += 0.05  # Small bonus for single character
+        # FIXED: Bonus for ideal person count (1-2 people both get bonus)
+        if person_count == 1 or person_count == 2:
+            autism_suitability += 0.05  # Bonus for 1-2 people (both are ideal)
         elif person_count == 0:
             autism_suitability -= 0.1   # Penalty for no people
         
