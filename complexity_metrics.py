@@ -818,9 +818,9 @@ class AutismComplexityAnalyzer:
         # Apply bonus/penalty modifiers
         person_count = results["person_count"]["count"]
         
-        # FIXED: Bonus for ideal person count (1-2 people both get bonus)
-        if person_count == 1 or person_count == 2:
-            autism_suitability += 0.05  # Bonus for 1-2 people (both are ideal)
+        # Bonus for ideal person count (1 person gets 5% bonus)
+        if person_count == 1:
+            autism_suitability += 0.05  # Small bonus for single character
         elif person_count == 0:
             autism_suitability -= 0.1   # Penalty for no people
         
