@@ -1,0 +1,45 @@
+AUTISM STORYBOARD EVALUATION REPORT
+============================================================
+Generated: 2025-08-08 23:01:55
+
+OVERALL ASSESSMENT
+------------------------------
+Combined Autism Score: 0.431
+Grade: F (Not suitable for autism education)
+Image: evaluated_image
+Prompt: children classroom teacher
+
+CATEGORY SCORES (Two-Level Hierarchy)
+------------------------------
+Simplicity (36.36% weight): 0.308
+Accuracy (33.33% weight): 0.792
+Consistency: N/A (single image - weights redistributed)
+
+DETAILED METRICS BY CATEGORY
+------------------------------
+
+📊 SIMPLICITY METRICS (36.36% of total):
+  Person Count: 0.000 (weight: 40%)
+  Background Simplicity: 0.242 (weight: 25%)
+  Color Appropriateness: 0.737 (weight: 15%)
+  Character Clarity: 0.661 (weight: 10%)
+  Sensory Friendliness: 0.750 (weight: 7%)
+  Focus Clarity: 0.615 (weight: 3%)
+
+🎯 ACCURACY METRICS (33.33% of total):
+  Prompt Faithfulness: 0.667 (weight: 60%)
+  Visual Quality: 0.979 (weight: 40%)
+
+AUTISM-SPECIFIC ANALYSIS
+------------------------------
+Person Count: 10 (✗ Non-compliant)
+Background: Complex (score: 0.242)
+Dominant Colors: 10
+Color Score: 0.737
+
+RECOMMENDATIONS
+------------------------------
+1. ⚠️ Significant improvements needed for autism suitability
+2. 👥 CRITICAL: Reduce to 1-2 people (currently 10)
+3. 🎨 Simplify background: remove distracting elements
+4. 🌈 Reduce color palette to 4-6 main colors

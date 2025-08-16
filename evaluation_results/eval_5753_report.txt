@@ -1,0 +1,42 @@
+AUTISM STORYBOARD EVALUATION REPORT
+============================================================
+Generated: 2025-08-08 22:40:09
+
+OVERALL ASSESSMENT
+------------------------------
+Combined Autism Score: 0.846
+Grade: B+ (Good for autism education)
+Image: evaluated_image
+Prompt: boy eating breakfast table
+
+CATEGORY SCORES (Two-Level Hierarchy)
+------------------------------
+Simplicity (36.36% weight): 0.711
+Accuracy (33.33% weight): 0.994
+Consistency: N/A (single image - weights redistributed)
+
+DETAILED METRICS BY CATEGORY
+------------------------------
+
+📊 SIMPLICITY METRICS (36.36% of total):
+  Person Count: 1.000 (weight: 40%)
+  Background Simplicity: 0.292 (weight: 25%)
+  Color Appropriateness: 0.783 (weight: 15%)
+  Character Clarity: 0.415 (weight: 10%)
+  Sensory Friendliness: 0.855 (weight: 7%)
+  Focus Clarity: 0.654 (weight: 3%)
+
+🎯 ACCURACY METRICS (33.33% of total):
+  Prompt Faithfulness: 1.000 (weight: 60%)
+  Visual Quality: 0.985 (weight: 40%)
+
+AUTISM-SPECIFIC ANALYSIS
+------------------------------
+Person Count: 1 (✓ Compliant)
+Background: Complex (score: 0.292)
+Dominant Colors: 9
+Color Score: 0.783
+
+RECOMMENDATIONS
+------------------------------
+1. ✅ Good foundation - apply recommendations for excellence

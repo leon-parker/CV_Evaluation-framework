@@ -1,0 +1,156 @@
+{
+  "image_name": "evaluated_image",
+  "prompt": "cartoon illustration of one happy young boy brushing teeth with toothbrush, simple white bathroom background, clean cartoon style, bright lighting, minimal objects, clear character",
+  "metrics": {
+    "visual_quality": {
+      "quality_score": 0.9070388202909582,
+      "quality_scores": {
+        "original_score": 1.0,
+        "statistical_score": 0.8350970507273955,
+        "threshold_score": 1.0,
+        "comprehensive_score": 0.91,
+        "combined_score": 0.9070388202909582,
+        "confidence": 0.875
+      },
+      "metrics": {
+        "laplacian_variance": 943.9597133120534,
+        "gradient_magnitude": 39.906012037589164,
+        "edge_density": 0.05633068084716797,
+        "multi_scale_sharpness_mean": 361.36680360395854,
+        "multi_scale_sharpness_std": 413.23625057682835,
+        "sharpness_uniformity": 2217.525899996061,
+        "is_blurry_enhanced": false,
+        "mean_brightness": 191.39902019500732,
+        "dynamic_range": 255.0,
+        "effective_dynamic_range": 235.0,
+        "core_dynamic_range": 201.0,
+        "bright_pixel_ratio": 0.677110989888509,
+        "dark_pixel_ratio": 0.06462224324544272,
+        "mid_tone_ratio": 0.25826676686604816,
+        "exposure_balance": 0.3875112533569337,
+        "is_overexposed": false,
+        "is_underexposed": false,
+        "mad_noise": 0.0,
+        "mad_noise_multi_scale_mean": 0.0,
+        "mad_noise_multi_scale_std": 0.0,
+        "noise_entropy": 1.725814904089265,
+        "noise_variation": 7.427558422088623,
+        "is_noisy_enhanced": false,
+        "rms_contrast": 56.63887302696378,
+        "local_contrast_mean": 7.60874080657959,
+        "local_contrast_std": 18.380626678466797,
+        "edge_contrast": -26.34586388736841,
+        "has_low_contrast": false,
+        "r_mean": 180.87549209594727,
+        "g_mean": 186.44802474975586,
+        "b_mean": 206.87354373931885,
+        "r_deviation": 10.523528099060059,
+        "g_deviation": 4.950995445251465,
+        "b_deviation": 15.474523544311523,
+        "rg_hist_distance": 0.7279014587402344,
+        "rb_hist_distance": 0.7662105560302734,
+        "gb_hist_distance": 0.5855617523193359,
+        "hue_coherence": 52.873976964017544,
+        "saturation_coherence": 57.00482551886503,
+        "has_color_artifacts": false,
+        "texture_energy": 89.58843684493658,
+        "texture_anisotropy": 3.2075697839908277,
+        "texture_uniformity": 22.71988723100826,
+        "edge_texture": 58.79259076738423,
+        "very_low_freq_ratio": 0.3568154778194165,
+        "low_freq_ratio": 0.29795092612229473,
+        "high_freq_ratio": 0.3088904484823963,
+        "frequency_centroid": 0.9157318230870872,
+        "original_blur_score": 943.9597133120534,
+        "original_is_blurry": false,
+        "original_mean_brightness": 191.39902019500732,
+        "original_is_overexposed": false,
+        "original_is_underexposed": false,
+        "original_noise_estimate": 9.236783981323242,
+        "original_is_noisy": false,
+        "original_overall_quality": 1.0
+      },
+      "has_artifacts": false,
+      "issues": [],
+      "classification_confidence": 0.875
+    },
+    "prompt_faithfulness": {
+      "score": 0.23529411764705882
+    },
+    "complexity": {
+      "person_count": {
+        "count": 1,
+        "score": 1.0,
+        "is_compliant": true,
+        "compliance_level": "Excellent",
+        "detection_breakdown": {
+          "face_detection": 1,
+          "clip_analysis": 2,
+          "shape_detection": 0,
+          "skin_detection": 2
+        },
+        "detection_method": "smart_consensus"
+      },
+      "background_simplicity": {
+        "score": 0.4190488870189498,
+        "edge_density": 0.061565399169921875,
+        "object_count": 0,
+        "is_simple": false
+      },
+      "color_appropriateness": {
+        "score": 0.62063224719766,
+        "dominant_colors": 8,
+        "avg_saturation": 0.222110606174843,
+        "avg_brightness": 0.8428119996014763,
+        "is_appropriate": false
+      },
+      "character_clarity": {
+        "score": 0.41410829132095,
+        "edge_strength": 0.04465675354003906,
+        "contrast": 0.15649416485329085,
+        "is_clear": false
+      },
+      "sensory_friendliness": {
+        "score": 0.7891397791593813,
+        "high_freq_ratio": 0.12862626706337527,
+        "intensity_variation": 0.0032974921632558107,
+        "is_sensory_friendly": true
+      },
+      "focus_clarity": {
+        "score": 0.702354660579158,
+        "focus_ratio": 1.401899288849585,
+        "has_clear_focus": true
+      },
+      "autism_suitability": 0.7655783123250132,
+      "autism_grade": "B+ (Good for autism storyboards)",
+      "recommendations": [
+        "\u2705 Perfect: Single character ideal for autism storyboards",
+        "\ud83d\udea8 Critical: Background too busy - significantly reduce visual clutter",
+        "\ud83c\udf08 Reduce colors: 8 colors may overwhelm - target 4-6 main colors",
+        "\u270f\ufe0f Improve character definition with clearer outlines",
+        "\u2705 Excellent for autism storyboards"
+      ]
+    }
+  },
+  "scores": {
+    "visual_quality": 0.9070388202909582,
+    "prompt_faithfulness": 0.23529411764705882,
+    "person_count": 1.0,
+    "background_simplicity": 0.4190488870189498,
+    "color_appropriateness": 0.62063224719766,
+    "character_clarity": 0.41410829132095,
+    "sensory_friendliness": 0.7891397791593813,
+    "focus_clarity": 0.702354660579158
+  },
+  "category_scores": {
+    "simplicity": 0.7155783123250131,
+    "accuracy": 0.5039919987046186,
+    "consistency": null
+  },
+  "combined_score": 0.6144400544144646,
+  "autism_grade": "D+ (Significant issues)",
+  "recommendations": [
+    "\u26a0\ufe0f Significant improvements needed for autism suitability",
+    "\ud83c\udfaf Improve prompt accuracy: ensure image matches description"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "image_name": "evaluated_image",
+  "prompt": "cartoon illustration of one happy young boy brushing teeth with toothbrush, simple white bathroom background, clean cartoon style, bright lighting, minimal objects, clear character",
+  "metrics": {
+    "visual_quality": {
+      "quality_score": 1.0,
+      "metrics": {
+        "laplacian_variance": 943.9597133120534,
+        "gradient_magnitude": 39.906012037589164,
+        "edge_density": 0.05633068084716797,
+        "multi_scale_sharpness_mean": 361.36680360395854,
+        "is_blurry": false,
+        "mean_brightness": 191.39902019500732,
+        "core_dynamic_range": 201.0,
+        "bright_pixel_ratio": 0.677110989888509,
+        "dark_pixel_ratio": 0.06462224324544272,
+        "is_overexposed": false,
+        "is_underexposed": false,
+        "mad_noise": 0.0,
+        "gaussian_noise": 9.236783981323242,
+        "noise_variation": 7.427558422088623,
+        "is_noisy": false,
+        "rms_contrast": 56.63887302696378,
+        "local_contrast_mean": 7.60874080657959,
+        "has_low_contrast": false,
+        "has_compression_artifacts": false,
+        "has_banding": false,
+        "has_color_artifacts": false
+      },
+      "has_artifacts": false,
+      "issues": []
+    },
+    "prompt_faithfulness": {
+      "score": 0.28278564453125
+    },
+    "complexity": {
+      "person_count": {
+        "count": 1,
+        "score": 1.0,
+        "is_compliant": true,
+        "detection_method": "face_detection"
+      },
+      "background_simplicity": {
+        "score": 0.6336430135990833,
+        "edge_density": 0.05633068084716797,
+        "object_count": 1,
+        "is_simple": false
+      },
+      "color_appropriateness": {
+        "score": 0.4161415638643152,
+        "dominant_colors": 8,
+        "avg_saturation": 0.222110606174843,
+        "avg_brightness": 0.8428119996014763,
+        "is_appropriate": false
+      },
+      "character_clarity": {
+        "score": 0.5658949506941886,
+        "edge_strength": 0.04465675354003906,
+        "contrast": 0.2221132275567207,
+        "is_clear": false
+      },
+      "sensory_friendliness": {
+        "score": 0.3088302450607027,
+        "high_freq_ratio": 0.25768658382747806,
+        "intensity_variation": 0.9439597133120534,
+        "is_sensory_friendly": false
+      },
+      "focus_clarity": {
+        "score": 0.3894900583938851,
+        "focus_ratio": 1.1684701751816553,
+        "has_clear_focus": false
+      },
+      "autism_suitability": 0.6690994605603476,
+      "recommendations": [
+        "\ud83c\udfa8 Simplify background - remove distracting elements",
+        "\ud83c\udf08 Reduce color palette to 4-6 colors",
+        "\u270f\ufe0f Improve character definition with clearer outlines",
+        "\u26a1 Reduce visual complexity to avoid sensory overload"
+      ]
+    }
+  },
+  "scores": {
+    "visual_quality": 1.0,
+    "prompt_faithfulness": 0.28278564453125,
+    "person_count": 1.0,
+    "background_simplicity": 0.6336430135990833,
+    "color_appropriateness": 0.4161415638643152,
+    "character_clarity": 0.5658949506941886,
+    "sensory_friendliness": 0.3088302450607027
+  },
+  "combined_score": 0.6601074505423283,
+  "autism_grade": "C (Needs improvements)",
+  "recommendations": [
+    "\u26a0\ufe0f Significant improvements needed for autism suitability",
+    "\ud83c\udfaf Improve prompt accuracy: ensure image matches description",
+    "\ud83c\udfa8 Simplify background: remove distracting elements",
+    "\ud83c\udf08 Reduce color palette to 4-6 main colors",
+    "\u270f\ufe0f Improve character definition: clearer outlines"
+  ]
+}

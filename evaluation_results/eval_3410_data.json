@@ -1,0 +1,152 @@
+{
+  "image_name": "evaluated_image",
+  "prompt": "realistic photo of busy classroom with five children and two teachers, complex detailed background with many books, papers, toys, posters, crowded scene with lots of activity and objects everywhere",
+  "metrics": {
+    "visual_quality": {
+      "quality_score": 0.979230588235294,
+      "quality_scores": {
+        "original_score": 1.0,
+        "statistical_score": 0.9855764705882353,
+        "threshold_score": 1.0,
+        "comprehensive_score": 0.95,
+        "combined_score": 0.979230588235294,
+        "confidence": 1.0
+      },
+      "metrics": {
+        "laplacian_variance": 1261.1814070552339,
+        "gradient_magnitude": 73.43977309442937,
+        "edge_density": 0.11715030670166016,
+        "multi_scale_sharpness_mean": 471.87412760412576,
+        "multi_scale_sharpness_std": 558.9039508142088,
+        "sharpness_uniformity": 2002.858913430573,
+        "is_blurry_enhanced": false,
+        "mean_brightness": 126.92965666453044,
+        "dynamic_range": 255.0,
+        "effective_dynamic_range": 251.0,
+        "core_dynamic_range": 242.0,
+        "bright_pixel_ratio": 0.2622823715209961,
+        "dark_pixel_ratio": 0.2690458297729492,
+        "mid_tone_ratio": 0.4686717987060547,
+        "exposure_balance": 0.9932365417480469,
+        "is_overexposed": false,
+        "is_underexposed": false,
+        "mad_noise": 1.0,
+        "mad_noise_multi_scale_mean": 1.0,
+        "mad_noise_multi_scale_std": 0.7071067811865476,
+        "noise_entropy": 2.78769085077174,
+        "noise_variation": 6.057415008544922,
+        "is_noisy_enhanced": false,
+        "rms_contrast": 73.86495083005099,
+        "local_contrast_mean": 12.44970703125,
+        "local_contrast_std": 17.827083587646484,
+        "edge_contrast": 2.4615894211922296,
+        "has_low_contrast": false,
+        "r_mean": 110.23964881896973,
+        "g_mean": 125.97918701171875,
+        "b_mean": 144.57013416290283,
+        "r_deviation": 16.690007845560714,
+        "g_deviation": 0.9504696528116909,
+        "b_deviation": 17.64047749837239,
+        "rg_hist_distance": 0.2843589782714844,
+        "rb_hist_distance": 0.5304107666015625,
+        "gb_hist_distance": 0.33991241455078125,
+        "hue_coherence": 40.896875449252555,
+        "saturation_coherence": 70.05690661860787,
+        "has_color_artifacts": false,
+        "texture_energy": 100.42138011504562,
+        "texture_anisotropy": 0.4588480499100456,
+        "texture_uniformity": 23.45531182544,
+        "edge_texture": 82.0078225232045,
+        "very_low_freq_ratio": 0.4200310762552563,
+        "low_freq_ratio": 0.23180660769653041,
+        "high_freq_ratio": 0.3045528217003374,
+        "frequency_centroid": 0.8409122510972051,
+        "original_blur_score": 1261.1814070552339,
+        "original_is_blurry": false,
+        "original_mean_brightness": 126.92965666453044,
+        "original_is_overexposed": false,
+        "original_is_underexposed": false,
+        "original_noise_estimate": 9.872146606445312,
+        "original_is_noisy": false,
+        "original_overall_quality": 1.0
+      },
+      "has_artifacts": false,
+      "issues": [],
+      "classification_confidence": 1.0
+    },
+    "prompt_faithfulness": {
+      "score": 0.65283203125
+    },
+    "complexity": {
+      "person_count": {
+        "count": 10,
+        "score": 0.0,
+        "is_compliant": false,
+        "compliance_level": "Poor",
+        "detection_breakdown": {
+          "face_detection": 22,
+          "clip_analysis": 5,
+          "shape_detection": 0,
+          "skin_detection": 2
+        },
+        "detection_method": "smart_consensus"
+      },
+      "background_simplicity": {
+        "score": 0.241552764215809,
+        "edge_density": 0.1279916763305664,
+        "object_count": 19,
+        "is_simple": false
+      },
+      "color_appropriateness": {
+        "score": 0.7369693446439807,
+        "dominant_colors": 10,
+        "avg_saturation": 0.4312893213010302,
+        "avg_brightness": 0.6101146174412148,
+        "is_appropriate": true
+      },
+      "character_clarity": {
+        "score": 0.661468932480499,
+        "edge_strength": 0.09492015838623047,
+        "contrast": 0.2879991101742328,
+        "is_clear": true
+      },
+      "sensory_friendliness": {
+        "score": 0.750216212718025,
+        "high_freq_ratio": 0.15070285502517541,
+        "intensity_variation": 0.003446381539106369,
+        "is_sensory_friendly": true
+      },
+      "focus_clarity": {
+        "score": 0.6148660458281021,
+        "focus_ratio": 1.2228000221920692,
+        "has_clear_focus": true
+      },
+      "autism_suitability": 0.008041602263704095,
+      "autism_grade": "F (Unsuitable for autism storyboards)",
+      "recommendations": [
+        "\ud83d\udea8 CRITICAL: Too many people (10) - reduce to 1-2 characters maximum",
+        "\ud83d\udea8 Critical: Background too busy - significantly reduce visual clutter",
+        "\ud83c\udf08 Reduce colors: 10 colors may overwhelm - target 4-6 main colors",
+        "\ud83d\udea8 Major changes needed for autism education use"
+      ]
+    }
+  },
+  "scores": {
+    "visual_quality": 0.979230588235294,
+    "prompt_faithfulness": 0.65283203125,
+    "person_count": 0.0,
+    "background_simplicity": 0.241552764215809,
+    "color_appropriateness": 0.7369693446439807,
+    "character_clarity": 0.661468932480499,
+    "sensory_friendliness": 0.750216212718025
+  },
+  "combined_score": 0.39425079445661215,
+  "autism_grade": "F (Not suitable for autism education)",
+  "recommendations": [
+    "\u26a0\ufe0f Significant improvements needed for autism suitability",
+    "\ud83c\udfaf Improve prompt accuracy: ensure image matches description",
+    "\ud83d\udc65 CRITICAL: Reduce to 1-2 people (currently 10)",
+    "\ud83c\udfa8 Simplify background: remove distracting elements",
+    "\ud83c\udf08 Reduce color palette to 4-6 main colors"
+  ]
+}

@@ -1,0 +1,35 @@
+AUTISM STORYBOARD EVALUATION REPORT
+============================================================
+Generated: 2025-07-31 21:35:47
+
+OVERALL ASSESSMENT
+------------------------------
+Combined Autism Score: 0.660
+Grade: C (Needs improvements)
+Image: evaluated_image
+Prompt: cartoon illustration of one happy young boy brushing teeth with toothbrush, simple white bathroom background, clean cartoon style, bright lighting, minimal objects, clear character
+
+DETAILED METRICS
+------------------------------
+Visual Quality: 1.000
+Prompt Faithfulness: 0.283
+Person Count: 1.000
+Background Simplicity: 0.634
+Color Appropriateness: 0.416
+Character Clarity: 0.566
+Sensory Friendliness: 0.309
+
+AUTISM-SPECIFIC ANALYSIS
+------------------------------
+Person Count: 1 (✓)
+Background Simplicity: 0.634 (Complex)
+Color Count: 8 colors
+Color Appropriateness: 0.416
+
+RECOMMENDATIONS
+------------------------------
+1. ⚠️ Significant improvements needed for autism suitability
+2. 🎯 Improve prompt accuracy: ensure image matches description
+3. 🎨 Simplify background: remove distracting elements
+4. 🌈 Reduce color palette to 4-6 main colors
+5. ✏️ Improve character definition: clearer outlines

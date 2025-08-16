@@ -1,0 +1,45 @@
+AUTISM STORYBOARD EVALUATION REPORT
+============================================================
+Generated: 2025-08-08 22:18:21
+
+OVERALL ASSESSMENT
+------------------------------
+Combined Autism Score: 0.782
+Grade: B (Suitable with minor improvements)
+Image: evaluated_image
+Prompt: boy brushing teeth bathroom
+
+CATEGORY SCORES (Two-Level Hierarchy)
+------------------------------
+Simplicity (36.36% weight): 0.631
+Accuracy (33.33% weight): 0.947
+Consistency: N/A (single image - weights redistributed)
+
+DETAILED METRICS BY CATEGORY
+------------------------------
+
+📊 SIMPLICITY METRICS (36.36% of total):
+  Person Count: 0.800 (weight: 40%)
+  Background Simplicity: 0.430 (weight: 25%)
+  Color Appropriateness: 0.604 (weight: 15%)
+  Character Clarity: 0.379 (weight: 10%)
+  Sensory Friendliness: 0.804 (weight: 7%)
+  Focus Clarity: 0.626 (weight: 3%)
+
+🎯 ACCURACY METRICS (33.33% of total):
+  Prompt Faithfulness: 1.000 (weight: 60%)
+  Visual Quality: 0.866 (weight: 40%)
+
+AUTISM-SPECIFIC ANALYSIS
+------------------------------
+Person Count: 2 (✓ Compliant)
+Background: Complex (score: 0.430)
+Dominant Colors: 8
+Color Score: 0.604
+
+RECOMMENDATIONS
+------------------------------
+1. ✅ Good foundation - apply recommendations for excellence
+2. 🎨 Simplify background: remove distracting elements
+3. 🌈 Reduce color palette to 4-6 main colors
+4. ✏️ Improve character definition: clearer outlines

@@ -1,27 +1,83 @@
 """
 Configuration settings for autism storyboard evaluation
 Defines weights, thresholds, and parameters for all metrics
+Using two-level hierarchy: Categories -> Sub-metrics
+
+WEIGHTS NORMALIZED: Original dissertation weights (36%, 33%, 30% = 99%)
+have been normalized to sum to exactly 100% while preserving proportions
 """
 
-# Evaluation weights for combined scoring
-# These weights were calibrated based on autism education priorities
-AUTISM_EVALUATION_WEIGHTS = {
-    # Technical quality
-    'visual_quality': 0.15,          # Artifact-free rendering
-    
-    # Semantic accuracy
-    'prompt_faithfulness': 0.20,     # Matches intended content
-    
-    # Autism-specific metrics (total: 0.65)
-    'person_count': 0.25,            # CRITICAL: 1-2 people max
-    'background_simplicity': 0.15,   # Reduced visual clutter
-    'color_appropriateness': 0.10,   # Sensory-friendly palette
-    'character_clarity': 0.08,       # Clear character definition
-    'sensory_friendliness': 0.07,    # Avoid overstimulation
-    
-    # Consistency (when applicable)
-    'consistency': 0.10,             # Character/style preservation
+# ============================================================================
+# TWO-LEVEL SCORING HIERARCHY
+# ============================================================================
+
+# Level 1: Main category weights (normalized from 36/33/30 to sum to 1.0)
+# Original weights from dissertation: 36%, 33%, 30% (sum = 99%)
+# Normalized to maintain proportions while summing to 100%
+CATEGORY_WEIGHTS = {
+    'simplicity': 0.363636,    # 36/99 = 36.36% - Most critical for autism
+    'accuracy': 0.333333,      # 33/99 = 33.33% - Technical and semantic quality
+    'consistency': 0.303030    # 30/99 = 30.30% - Character/style preservation
 }
+# Note: These are the exact normalized values from the dissertation's 36/33/30 split
+
+# Level 2: Sub-metric weights within each category (each category must sum to 1.0)
+SIMPLICITY_WEIGHTS = {
+    'person_count': 0.40,           # 40% of simplicity - CRITICAL: 1-2 people max
+    'background_simplicity': 0.25,  # 25% of simplicity - Reduced visual clutter
+    'color_appropriateness': 0.15,  # 15% of simplicity - Sensory-friendly palette
+    'character_clarity': 0.10,      # 10% of simplicity - Clear character definition
+    'sensory_friendliness': 0.07,   # 7% of simplicity - Avoid overstimulation
+    'focus_clarity': 0.03           # 3% of simplicity - Clear focal point
+}
+
+ACCURACY_WEIGHTS = {
+    'prompt_faithfulness': 0.60,    # 60% of accuracy - Semantic match
+    'visual_quality': 0.40          # 40% of accuracy - Technical quality
+}
+
+CONSISTENCY_WEIGHTS = {
+    'character_consistency': 0.70,  # 70% of consistency - Identity preservation
+    'style_consistency': 0.30       # 30% of consistency - Style preservation
+}
+
+# Combined structure for easy access
+EVALUATION_WEIGHTS = {
+    'categories': CATEGORY_WEIGHTS,
+    'simplicity': SIMPLICITY_WEIGHTS,
+    'accuracy': ACCURACY_WEIGHTS,
+    'consistency': CONSISTENCY_WEIGHTS
+}
+
+# ============================================================================
+# LEGACY FLAT WEIGHTS (for backward compatibility if needed)
+# These are the calculated flat weights: category_weight * sub_metric_weight
+# Using normalized category weights
+# ============================================================================
+AUTISM_EVALUATION_WEIGHTS_FLAT = {
+    # Simplicity metrics (36.36% total)
+    'person_count': 0.1454,          # 0.363636 * 0.40 = 0.1454
+    'background_simplicity': 0.0909,  # 0.363636 * 0.25 = 0.0909
+    'color_appropriateness': 0.0545,  # 0.363636 * 0.15 = 0.0545
+    'character_clarity': 0.0364,      # 0.363636 * 0.10 = 0.0364
+    'sensory_friendliness': 0.0255,   # 0.363636 * 0.07 = 0.0255
+    'focus_clarity': 0.0109,          # 0.363636 * 0.03 = 0.0109
+    
+    # Accuracy metrics (33.33% total)
+    'prompt_faithfulness': 0.2000,    # 0.333333 * 0.60 = 0.2000
+    'visual_quality': 0.1333,         # 0.333333 * 0.40 = 0.1333
+    
+    # Consistency metrics (30.30% total when applicable)
+    'character_consistency': 0.2121,  # 0.303030 * 0.70 = 0.2121
+    'style_consistency': 0.0909       # 0.303030 * 0.30 = 0.0909
+}
+
+# For backward compatibility
+AUTISM_EVALUATION_WEIGHTS = AUTISM_EVALUATION_WEIGHTS_FLAT
+
+# ============================================================================
+# THRESHOLDS AND OTHER SETTINGS (unchanged)
+# ============================================================================
 
 # Minimum acceptable thresholds for each metric
 METRIC_THRESHOLDS = {
@@ -32,7 +88,9 @@ METRIC_THRESHOLDS = {
     'color_appropriateness': 0.6,    # Appropriate palette
     'character_clarity': 0.6,        # Clear definition
     'sensory_friendliness': 0.6,     # Not overwhelming
-    'consistency': 0.7,              # Good preservation
+    'focus_clarity': 0.5,            # Has focal point
+    'character_consistency': 0.7,    # Good preservation
+    'style_consistency': 0.7         # Style maintained
 }
 
 # Visual complexity classification thresholds
@@ -85,3 +143,47 @@ AUTISM_GUIDELINES = {
     'avoid_patterns': ['stripes', 'checkerboard', 'spiral'],
     'preferred_emotions': ['happy', 'calm', 'neutral']
 }
+
+# Validation function to ensure weights are properly configured
+def validate_weights():
+    """Validate that all weights sum to 1.0 within their respective groups"""
+    issues = []
+    
+    # Check category weights (allowing for normalized 99% weights)
+    category_sum = sum(CATEGORY_WEIGHTS.values())
+    if abs(category_sum - 1.0) > 0.001:
+        issues.append(f"Category weights sum to {category_sum}, should be 1.0 (normalized from 36/33/30)")
+    
+    # Check simplicity weights
+    simplicity_sum = sum(SIMPLICITY_WEIGHTS.values())
+    if abs(simplicity_sum - 1.0) > 0.001:
+        issues.append(f"Simplicity weights sum to {simplicity_sum}, should be 1.0")
+    
+    # Check accuracy weights
+    accuracy_sum = sum(ACCURACY_WEIGHTS.values())
+    if abs(accuracy_sum - 1.0) > 0.001:
+        issues.append(f"Accuracy weights sum to {accuracy_sum}, should be 1.0")
+    
+    # Check consistency weights
+    consistency_sum = sum(CONSISTENCY_WEIGHTS.values())
+    if abs(consistency_sum - 1.0) > 0.001:
+        issues.append(f"Consistency weights sum to {consistency_sum}, should be 1.0")
+    
+    if issues:
+        print("⚠️ Weight configuration issues:")
+        for issue in issues:
+            print(f"  - {issue}")
+        return False
+    
+    return True
+
+# Run validation on import
+if __name__ == "__main__" or True:  # Always validate on import
+    if validate_weights():
+        print("✅ Weight configuration validated successfully")
+        print(f"   Category weights (normalized from 36/33/30):")
+        print(f"   - Simplicity: {CATEGORY_WEIGHTS['simplicity']:.4f} (36.36%)")
+        print(f"   - Accuracy: {CATEGORY_WEIGHTS['accuracy']:.4f} (33.33%)")
+        print(f"   - Consistency: {CATEGORY_WEIGHTS['consistency']:.4f} (30.30%)")
+    else:
+        print("❌ Weight configuration has errors")
