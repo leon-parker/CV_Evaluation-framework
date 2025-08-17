@@ -6,20 +6,21 @@ A comprehensive evaluation system for assessing AI-generated images for autism e
 
 This framework provides automated evaluation of storyboard images specifically designed for autism education contexts. It implements a two-level scoring hierarchy based on educator feedback and autism-specific visual design principles.
 
-### Key Achievements
-- **90% accuracy** in prompt faithfulness evaluation using BLIP-Large
-- **97% binary accuracy** in visual simplicity classification (100% sensitivity)
-- **100% precision and recall** in artifact detection
-- **Perfect 5.0/5.0 ratings** from special education professionals for top-scoring storyboards
+### Key Features
+- **BLIP-Large based** prompt faithfulness evaluation with proven accuracy
+- **Multi-method** visual quality assessment using Random Forest classification
+- **Character consistency** tracking across image sequences using CLIP
+- **Autism-specific** complexity metrics based on educational research
+- **Two-level scoring** hierarchy with normalized weights
 
 ## 📊 Scoring System
 
 ### Two-Level Hierarchy
 
 **Level 1: Main Categories** (normalized from dissertation's 36/33/30 to sum to 100%)
-- **Simplicity**: 36.36% of total score
-- **Accuracy**: 33.33% of total score  
-- **Consistency**: 30.30% of total score (when applicable)
+- **Simplicity**: 36.36% of total score (autism-specific complexity metrics)
+- **Accuracy**: 33.33% of total score (visual quality + prompt faithfulness)
+- **Consistency**: 30.30% of total score (character/style preservation across sequences)
 
 **Level 2: Sub-metrics Within Each Category**
 
@@ -27,11 +28,11 @@ This framework provides automated evaluation of storyboard images specifically d
 | Metric | Weight | Description |
 |--------|--------|-------------|
 | Person Count | 40% | Maximum 2 people, ideal 1 person |
-| Background Simplicity | 25% | Minimal visual clutter |
+| Background Simplicity | 30% | Minimal visual clutter |
 | Color Appropriateness | 15% | 4-6 main colors ideal |
-| Character Clarity | 10% | Clear outlines and definition |
-| Sensory Friendliness | 7% | Avoiding overstimulation |
-| Focus Clarity | 3% | Clear focal point |
+| Character Clarity | 8% | Clear outlines and definition |
+| Sensory Friendliness | 5% | Avoiding overstimulation |
+| Focus Clarity | 2% | Clear focal point |
 
 #### 🎯 Accuracy (33.33% weight) - Semantic and Technical Quality
 | Metric | Weight | Description |
@@ -63,37 +64,45 @@ This framework provides automated evaluation of storyboard images specifically d
 
 ## 🚀 Installation
 
+### Prerequisites
+- Python 3.8+
+- CUDA-capable GPU (recommended for model loading)
+- 8GB+ RAM
+
+### Step 1: Clone Repository
 ```bash
-# Clone the repository
 git clone https://github.com/leon-parker/CV_Evaluation-framework
 cd CV_Evaluation-framework
+```
 
-# Install dependencies
+### Step 2: Install Dependencies
+```bash
+# Install all required packages
 pip install -r requirements.txt
 
 # Optional: Install for development
 pip install -e .
 ```
 
-### Requirements
-- Python 3.8+
-- PyTorch 2.0+
-- CUDA-capable GPU (recommended)
-- 8GB+ RAM
+### Step 3: Verify Installation
+```bash
+python -c "from autism_evaluator import AutismStoryboardEvaluator; print('✅ Installation successful!')"
+```
 
 ### Key Dependencies
 ```
-torch>=2.0.0
-transformers>=4.30.0
-scikit-learn>=1.3.0
-opencv-python>=4.8.0
-Pillow>=10.0.0
-numpy>=1.24.0
-matplotlib>=3.7.0
+torch>=2.0.0                 # Core ML framework
+transformers>=4.30.0         # BLIP-Large and CLIP models
+diffusers>=0.21.0           # Required for image generation scripts
+compel>=2.0.0               # Required for generation scripts
+scikit-learn>=1.3.0         # Random Forest classification
+opencv-python>=4.8.0        # Computer vision operations
+sentence-transformers>=2.2.0 # Optional: Enhanced semantic similarity
 ```
 
 ## 💻 Quick Start
 
+### Basic Image Evaluation
 ```python
 from autism_evaluator import AutismStoryboardEvaluator
 
@@ -103,7 +112,8 @@ evaluator = AutismStoryboardEvaluator(verbose=True)
 # Evaluate a single image
 results = evaluator.evaluate_single_image(
     image="path/to/image.png",
-    prompt="one cartoon boy brushing teeth, simple background"
+    prompt="boy brushing teeth",  # Keep prompts simple for BLIP evaluation
+    save_report=True
 )
 
 # Display results
@@ -114,19 +124,37 @@ for category, score in results['category_scores'].items():
     print(f"  {category.title()}: {score:.3f}")
 ```
 
+### Batch Evaluation with Overall Assessment
+```python
+# Evaluate multiple images and get overall assessment
+images = ["image1.png", "image2.png", "image3.png"]
+prompts = ["boy eating", "girl reading", "child playing"]
+
+batch_results = evaluator.evaluate_batch(
+    images=images,
+    prompts=prompts,
+    save_overall_report=True
+)
+
+# View overall assessment
+assessment = batch_results['overall_assessment']
+print(f"Average Score: {assessment['average_score']:.3f}")
+print(f"Autism Appropriate: {assessment['autism_appropriate']['percentage']:.0f}%")
+```
+
 ## 📖 Usage Examples
 
-### Evaluate Image Sequence
+### Evaluate Image Sequence with Consistency
 ```python
 # Define your storyboard frames
 images = ["frame1.png", "frame2.png", "frame3.png"]
 prompts = [
-    "boy waking up in bed",
-    "boy brushing teeth in bathroom",
-    "boy eating breakfast at table"
+    "boy waking up",
+    "boy brushing teeth", 
+    "boy eating breakfast"
 ]
 
-# Evaluate the sequence
+# Evaluate the sequence (includes consistency analysis)
 sequence_results = evaluator.evaluate_sequence(
     images=images,
     prompts=prompts,
@@ -134,6 +162,7 @@ sequence_results = evaluator.evaluate_sequence(
 )
 
 print(f"Overall Sequence Score: {sequence_results['overall_score']:.3f}")
+print(f"Character Consistency: {sequence_results['overall_category_scores']['consistency']:.3f}")
 ```
 
 ### Evaluate with Character Reference
@@ -141,98 +170,96 @@ print(f"Overall Sequence Score: {sequence_results['overall_score']:.3f}")
 # Use reference image for consistency checking
 results = evaluator.evaluate_single_image(
     image="generated_image.png",
-    prompt="cartoon boy playing with ball",
-    reference_image="character_reference.png"
+    prompt="boy playing ball",
+    reference_image="character_reference.png"  # For consistency analysis
 )
 
 # Check consistency scores if available
 if 'consistency' in results['category_scores']:
-    print(f"Character Consistency: {results['scores']['character_consistency']:.3f}")
+    print(f"Character Consistency: {results['category_scores']['consistency']:.3f}")
 ```
 
-### Batch Evaluation
+### Enable Enhanced Semantic Similarity (Optional)
 ```python
-# Evaluate multiple images
-test_images = [
-    ("img1.png", "boy reading book"),
-    ("img2.png", "girl drawing picture"),
-    ("img3.png", "children playing together")
-]
+# The framework includes optional semantic similarity for prompt evaluation
+# To enable, ensure sentence-transformers is installed:
+# pip install sentence-transformers
 
-for image_path, prompt in test_images:
-    results = evaluator.evaluate_single_image(image_path, prompt, save_report=False)
-    print(f"{image_path}: Score={results['combined_score']:.3f}, Grade={results['autism_grade']}")
+from prompt_metrics import PromptFaithfulnessAnalyzer
+
+# Enable semantic understanding for synonyms/concepts
+analyzer = PromptFaithfulnessAnalyzer(use_semantic=True)
+score = analyzer.evaluate_prompt_alignment(
+    image="image.png", 
+    prompt="happy child eating breakfast",
+    method="combined"  # 60% keyword + 40% semantic
+)
 ```
 
 ## 📁 Project Structure
 
 ```
 CV_Evaluation-framework/
-├── autism_evaluator.py        # Main evaluation orchestrator
-├── complexity_metrics.py      # Autism-specific complexity analysis
-├── prompt_metrics.py          # BLIP-Large prompt faithfulness
-├── consistency_metrics.py     # CLIP-based consistency checking
-├── cv_metrics.py             # Visual quality assessment
-├── evaluation_config.py      # Configuration and weights
-├── utils.py                  # Helper functions and visualization
-├── requirements.txt          # Package dependencies
-├── setup.py                  # Installation setup
-└── README.md                # This file
+├── autism_evaluator.py          # Main evaluation orchestrator
+├── complexity_metrics.py        # Autism-specific complexity analysis
+├── prompt_metrics.py            # BLIP-Large prompt faithfulness
+├── consistency_metrics.py       # CLIP-based consistency checking
+├── cv_metrics.py                # Visual quality assessment
+├── evaluation_config.py         # Configuration and weights
+├── utils.py                     # Helper functions and visualization
+├── autism_generator.py          # Multi-generation autism-optimized image creation
+├── Test_sequence_script.py      # Advanced test with AI refiner
+├── requirements.txt             # Package dependencies
+├── setup.py                     # Installation setup
+└── README.md                   # This file
 ```
 
-## 📈 Key Features
+## 📈 Key Technical Features
 
-### 🧩 Smart Consensus Person Counting
+### 🧩 Autism-Specific Person Counting
 Multi-method approach combining:
-- Face detection (frontal + profile)
-- CLIP semantic analysis
-- Shape detection
-- Skin region analysis
+- Face detection (frontal + profile cascades)
+- CLIP semantic analysis for character understanding
+- Shape detection optimized for cartoon styles  
+- Skin region analysis with diverse tone ranges
+- Smart consensus algorithm for final count
 
-### 🎯 BLIP-Large Integration
-- 90% accuracy on autism education test set
-- Keyword-based matching (default)
+### 🎯 BLIP-Large Prompt Faithfulness
+- Keyword-based matching (default) with high accuracy
 - Optional semantic similarity for synonym understanding
+- Optimized for autism education terminology
+- Simple prompt preprocessing for better BLIP alignment
 
-### 📊 Comprehensive Reporting
-- Detailed text reports with category breakdowns
-- JSON data export for further analysis
-- Visual dashboards with score visualization
+### 📊 Enhanced Visual Quality Assessment
+- Random Forest classifier for artifact detection
+- Multi-scale sharpness analysis
+- Comprehensive noise detection using MAD (Median Absolute Deviation)
+- Statistical threshold optimization
 
-### 🔄 Sequence Evaluation
-- Frame-to-frame consistency tracking
-- Drift detection across sequences
-- Character identity preservation scoring
-
-## 🔬 Performance Metrics
-
-| Component | Performance | Details |
-|-----------|------------|---------|
-| **Prompt Faithfulness** | 90% accuracy | BLIP-Large on autism education dataset |
-| **Visual Simplicity** | 97% binary accuracy | 100% sensitivity for simple scenes |
-| **Artifact Detection** | 100% precision/recall | Random Forest classifier |
-| **Person Counting** | 97% accuracy | Smart consensus algorithm |
-| **Consistency Improvement** | +16.8% | With IP-Adapter (Cohen's d = 2.01) |
+### 🔄 CLIP-Based Sequence Consistency
+- Character-focused region extraction with face detection
+- Separate character and style embedding analysis
+- Drift detection across long sequences
+- Frame-to-frame consistency scoring
 
 ## 📝 Output Files
 
 The framework generates three types of outputs:
 
 1. **Text Reports** (`eval_XXXX_report.txt`)
-   - Overall scores and grades
-   - Category breakdowns
-   - Detailed metrics
-   - Recommendations
+   - Overall scores and grades with category breakdown
+   - Detailed metrics and autism-specific analysis
+   - Specific recommendations for improvement
 
 2. **JSON Data** (`eval_XXXX_data.json`)
-   - Complete evaluation results
-   - All metric values
-   - Machine-readable format
+   - Complete evaluation results in machine-readable format
+   - All metric values and intermediate calculations
+   - Suitable for further analysis and research
 
 3. **Visual Dashboards** (`eval_XXXX_dashboard.png`)
-   - Score visualization
-   - Metric breakdown charts
-   - Visual quality indicators
+   - Score visualization with gauge charts
+   - Metric breakdown bar charts
+   - Visual quality indicators and recommendations
 
 ## 🎓 Academic Context
 
@@ -241,6 +268,12 @@ This framework was developed as part of:
 - **Program**: MSc Computer Science
 - **Institution**: Newcastle University
 - **Year**: 2024-2025
+
+### Research Contributions
+- Two-level hierarchical scoring system optimized for autism education
+- Multi-method person counting algorithm achieving high accuracy
+- Integration of educational psychology principles with computer vision
+- Comprehensive evaluation framework for AI-generated educational content
 
 ### Citation
 If you use this framework in your research, please cite:
@@ -254,17 +287,37 @@ If you use this framework in your research, please cite:
 }
 ```
 
-## 🤝 Contributing
+## 🔧 Advanced Usage
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for:
-- Bug fixes
-- Performance improvements
-- Additional evaluation metrics
-- Documentation improvements
+### Custom Model Paths
+For image generation scripts, specify model paths:
+```python
+from autism_generator import AutismStoryboardGenerator
 
-## 📬 Contact
+generator = AutismStoryboardGenerator(
+    base_model_path="path/to/sdxl_model.safetensors",
+    refiner_model_path="path/to/refiner_model.safetensors"  # Optional
+)
 
-**Leon Parker**  
-MSc Computer Science Student  
-Newcastle University  
+if generator.setup():
+    result = generator.generate_autism_appropriate_image(
+        prompt="boy reading book",
+        output_dir="generated_images"
+    )
+```
+
+### Testing the Framework
+Run the comprehensive test suite:
+```bash
+python Test_sequence_script.py  # Generates test images and validates scoring
+python simplified_test.py       # Basic functionality test
+```
+
+
+## ⚠️ Important Notes
+
+1. **GPU Memory**: Model loading requires significant GPU memory (8GB+ recommended)
+2. **Model Files**: Generation scripts require SDXL model files (not included)
+3. **Prompt Simplification**: Keep evaluation prompts simple for optimal BLIP performance
+4. **Semantic Features**: Enhanced semantic similarity is optional and requires sentence-transformers
 

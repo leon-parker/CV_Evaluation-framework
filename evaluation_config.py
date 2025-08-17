@@ -24,11 +24,11 @@ CATEGORY_WEIGHTS = {
 # Level 2: Sub-metric weights within each category (each category must sum to 1.0)
 SIMPLICITY_WEIGHTS = {
     'person_count': 0.40,           # 40% of simplicity - CRITICAL: 1-2 people max
-    'background_simplicity': 0.25,  # 25% of simplicity - Reduced visual clutter
+    'background_simplicity': 0.30,  # 30% of simplicity - Reduced visual clutter
     'color_appropriateness': 0.15,  # 15% of simplicity - Sensory-friendly palette
-    'character_clarity': 0.10,      # 10% of simplicity - Clear character definition
-    'sensory_friendliness': 0.07,   # 7% of simplicity - Avoid overstimulation
-    'focus_clarity': 0.03           # 3% of simplicity - Clear focal point
+    'character_clarity': 0.08,      # 8% of simplicity - Clear character definition
+    'sensory_friendliness': 0.05,   # 5% of simplicity - Avoid overstimulation
+    'focus_clarity': 0.02           # 2% of simplicity - Clear focal point
 }
 
 ACCURACY_WEIGHTS = {
@@ -56,12 +56,12 @@ EVALUATION_WEIGHTS = {
 # ============================================================================
 AUTISM_EVALUATION_WEIGHTS_FLAT = {
     # Simplicity metrics (36.36% total)
-    'person_count': 0.1454,          # 0.363636 * 0.40 = 0.1454
-    'background_simplicity': 0.0909,  # 0.363636 * 0.25 = 0.0909
+    'person_count': 0.1455,          # 0.363636 * 0.40 = 0.1455
+    'background_simplicity': 0.1091,  # 0.363636 * 0.30 = 0.1091
     'color_appropriateness': 0.0545,  # 0.363636 * 0.15 = 0.0545
-    'character_clarity': 0.0364,      # 0.363636 * 0.10 = 0.0364
-    'sensory_friendliness': 0.0255,   # 0.363636 * 0.07 = 0.0255
-    'focus_clarity': 0.0109,          # 0.363636 * 0.03 = 0.0109
+    'character_clarity': 0.0291,      # 0.363636 * 0.08 = 0.0291
+    'sensory_friendliness': 0.0182,   # 0.363636 * 0.05 = 0.0182
+    'focus_clarity': 0.0073,          # 0.363636 * 0.02 = 0.0073
     
     # Accuracy metrics (33.33% total)
     'prompt_faithfulness': 0.2000,    # 0.333333 * 0.60 = 0.2000
@@ -117,7 +117,9 @@ COMPLEXITY_THRESHOLDS = {
 
 # Model configurations
 MODEL_CONFIGS = {
+    'blip_model': "Salesforce/blip-image-captioning-large",  # Added: specific BLIP model
     'clip_model': "openai/clip-vit-large-patch14",
+    'sentence_transformer_model': "all-MiniLM-L6-v2",  # Added: for semantic similarity
     'device': 'cuda',  # Will fall back to CPU if unavailable
     'batch_size': 4,
     'cache_dir': './model_cache'
