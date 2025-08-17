@@ -1,0 +1,198 @@
+{
+  "image_name": "evaluated_image",
+  "prompt": "boy eating breakfast table",
+  "metrics": {
+    "visual_quality": {
+      "quality_score": 0.8933990588235294,
+      "quality_scores": {
+        "original_score": 1.0,
+        "statistical_score": 0.9459976470588235,
+        "threshold_score": 0.8,
+        "comprehensive_score": 0.8500000000000001,
+        "combined_score": 0.8933990588235294,
+        "confidence": 0.875
+      },
+      "metrics": {
+        "laplacian_variance": 250.69241572614428,
+        "gradient_magnitude": 14.73647268044045,
+        "edge_density": 0.02798175811767578,
+        "multi_scale_sharpness_mean": 95.45464945203567,
+        "multi_scale_sharpness_std": 110.0191498645649,
+        "sharpness_uniformity": 1144.068974578286,
+        "is_blurry_enhanced": false,
+        "mean_brightness": 204.2779026031494,
+        "dynamic_range": 255.0,
+        "effective_dynamic_range": 234.0,
+        "core_dynamic_range": 141.0,
+        "bright_pixel_ratio": 0.7569115956624349,
+        "dark_pixel_ratio": 0.026296615600585938,
+        "mid_tone_ratio": 0.21679178873697916,
+        "exposure_balance": 0.269385019938151,
+        "is_overexposed": false,
+        "is_underexposed": false,
+        "mad_noise": 0.0,
+        "mad_noise_multi_scale_mean": 0.0,
+        "mad_noise_multi_scale_std": 0.0,
+        "noise_entropy": 0.7766212288657596,
+        "noise_variation": 4.296407699584961,
+        "is_noisy_enhanced": false,
+        "rms_contrast": 45.24213345958584,
+        "local_contrast_mean": 2.8584704399108887,
+        "local_contrast_std": 9.799520492553711,
+        "edge_contrast": -38.312934992913114,
+        "has_low_contrast": false,
+        "r_mean": 215.02489376068115,
+        "g_mean": 203.92330265045166,
+        "b_mean": 193.88551139831543,
+        "r_deviation": 10.746991157531738,
+        "g_deviation": 0.3545999526977539,
+        "b_deviation": 10.392391204833984,
+        "rg_hist_distance": 0.9755516052246094,
+        "rb_hist_distance": 1.4305133819580078,
+        "gb_hist_distance": 1.0798835754394531,
+        "hue_coherence": 44.427469503336866,
+        "saturation_coherence": 42.40896294631137,
+        "has_color_artifacts": false,
+        "texture_energy": 47.386542101995204,
+        "texture_anisotropy": 0.8237029267276306,
+        "texture_uniformity": 18.04431543211517,
+        "edge_texture": 42.0547336925825,
+        "very_low_freq_ratio": 0.42330796455330255,
+        "low_freq_ratio": 0.2533633118360893,
+        "high_freq_ratio": 0.28878353026135734,
+        "frequency_centroid": 0.830930372358804,
+        "original_blur_score": 250.69241572614428,
+        "original_is_blurry": false,
+        "original_mean_brightness": 204.2779026031494,
+        "original_is_overexposed": false,
+        "original_is_underexposed": false,
+        "original_noise_estimate": 4.621918201446533,
+        "original_is_noisy": false,
+        "original_overall_quality": 1.0
+      },
+      "has_artifacts": false,
+      "issues": [],
+      "classification_confidence": 0.875
+    },
+    "prompt_faithfulness": {
+      "score": 0.75
+    },
+    "complexity": {
+      "person_count": {
+        "count": 1,
+        "is_compliant": true,
+        "compliance_level": "Excellent",
+        "detection_breakdown": {
+          "face_detection": 2,
+          "clip_analysis": 1,
+          "shape_detection": 0,
+          "skin_detection": 1
+        },
+        "score": 1.0,
+        "detection_method": "smart_consensus",
+        "details": "Smart consensus: 1 people - Perfect for autism storyboards"
+      },
+      "background_simplicity": {
+        "score": 0.5850213202721937,
+        "complexity_breakdown": {
+          "edge_simplicity": 0.5947036743164062,
+          "texture_simplicity": 0.9644048810005188,
+          "color_simplicity": 0.0775449886357108,
+          "object_simplicity": 1.0,
+          "frequency_simplicity": 0.0,
+          "edge_density": 0.028949737548828125,
+          "object_count": 0
+        },
+        "grade": "Acceptable - Manageable background complexity",
+        "is_simple": false,
+        "edge_density": 0.028949737548828125,
+        "object_count": 0,
+        "details": "Improved analysis: 0.585 - Acceptable - Manageable background complexity"
+      },
+      "color_appropriateness": {
+        "score": 0.6080428654109696,
+        "dominant_colors": 8,
+        "color_count_score": 0.7,
+        "avg_saturation": 0.1804879431631051,
+        "saturation_score": 0.29573191474465765,
+        "avg_brightness": 0.8719026640349743,
+        "brightness_score": 0.846616454937862,
+        "is_appropriate": false,
+        "grade": "Moderate - Acceptable for cartoons",
+        "details": "Optimized for cartoon style: 8 colors, Moderate - Acceptable for cartoons"
+      },
+      "character_clarity": {
+        "score": 0.1846470866542536,
+        "edge_clarity": 0.1669921875,
+        "contrast_clarity": 0.17337026682871118,
+        "shape_clarity": 0.24251052461384565,
+        "edge_strength": 0.0208740234375,
+        "contrast": 0.057790088942903724,
+        "is_clear": false,
+        "grade": "Poor - Unclear or blurry characters",
+        "details": "Higher score = clearer character boundaries and definition"
+      },
+      "sensory_friendliness": {
+        "score": 0.8107511889397062,
+        "pattern_score": 0.6321996822404192,
+        "intensity_score": 0.9919936060905457,
+        "high_freq_ratio": 0.12260010591986026,
+        "intensity_variance": 0.0008006375865079463,
+        "intensity_variation": 0.0008006375865079463,
+        "is_sensory_friendly": true,
+        "grade": "Excellent - Very sensory-friendly",
+        "details": "Higher score = less overwhelming, more sensory-appropriate"
+      },
+      "focus_clarity": {
+        "score": 1.0,
+        "focus_ratio": 2.029467263101771,
+        "contrast_ratio": 2.6249250906547044,
+        "center_edge_density": 8.089389041376185,
+        "peripheral_edge_density": 3.9859657551437264,
+        "has_clear_focus": true,
+        "grade": "Excellent - Clear single focus",
+        "details": "Higher score = clearer focal point, less distraction"
+      },
+      "autism_suitability": 0.7420221522726291,
+      "complexity_category": "Low Complexity (Autism-Friendly)",
+      "autism_grade": "B+ (Good for autism storyboards)",
+      "recommendations": [
+        "\u2705 Perfect: Single character ideal for autism storyboards",
+        "\ud83d\udc4d Good: Background mostly appropriate",
+        "\ud83c\udf08 Reduce colors: 8 colors may overwhelm - target 4-6 main colors",
+        "\u270f\ufe0f Improve character definition with clearer outlines",
+        "\ud83d\udcca Classification: Low Complexity (Autism-Friendly)",
+        "\u2705 Excellent for autism storyboards"
+      ]
+    },
+    "consistency": {
+      "character_consistency": 0.7884330778907517,
+      "style_consistency": 0.8020661969308485,
+      "combined_consistency": 0.7925230136027807,
+      "is_consistent": true,
+      "frame_count": 2
+    }
+  },
+  "scores": {
+    "visual_quality": 0.8933990588235294,
+    "prompt_faithfulness": 0.75,
+    "person_count": 1.0,
+    "background_simplicity": 0.5850213202721937,
+    "color_appropriateness": 0.6080428654109696,
+    "character_clarity": 0.1846470866542536,
+    "sensory_friendliness": 0.8107511889397062,
+    "focus_clarity": 1.0,
+    "character_consistency": 0.7884330778907517,
+    "style_consistency": 0.8020661969308485
+  },
+  "category_scores": {
+    "simplicity": 0.7426790517708987,
+    "accuracy": 0.8073596235294118,
+    "consistency": 0.7925230136027807
+  },
+  "combined_score": 0.7793426938717425,
+  "autism_grade": "B (Suitable with minor improvements)",
+  "recommendations": [
+    "\u2705 Good foundation - apply recommendations for excellence"
+  ]
+}

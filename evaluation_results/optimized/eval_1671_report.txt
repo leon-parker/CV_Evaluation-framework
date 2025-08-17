@@ -1,0 +1,42 @@
+AUTISM STORYBOARD EVALUATION REPORT
+============================================================
+Generated: 2025-08-17 01:28:27
+
+OVERALL ASSESSMENT
+------------------------------
+Combined Autism Score: 0.743
+Grade: C+ (Acceptable with improvements)
+Image: evaluated_image
+Prompt: boy waking up bed
+
+CATEGORY SCORES (Two-Level Hierarchy)
+------------------------------
+Simplicity (36.36% weight): 0.724
+Accuracy (33.33% weight): 0.764
+Consistency: N/A (single image - weights redistributed)
+
+DETAILED METRICS BY CATEGORY
+------------------------------
+
+📊 SIMPLICITY METRICS (36.36% of total):
+  Person Count: 1.000 (weight: 40%)
+  Background Simplicity: 0.536 (weight: 25%)
+  Color Appropriateness: 0.600 (weight: 15%)
+  Character Clarity: 0.212 (weight: 10%)
+  Sensory Friendliness: 0.817 (weight: 7%)
+  Focus Clarity: 0.725 (weight: 3%)
+
+🎯 ACCURACY METRICS (33.33% of total):
+  Prompt Faithfulness: 0.667 (weight: 60%)
+  Visual Quality: 0.911 (weight: 40%)
+
+AUTISM-SPECIFIC ANALYSIS
+------------------------------
+Person Count: 1 (✓ Compliant)
+Background: Complex (score: 0.536)
+Dominant Colors: 8
+Color Score: 0.600
+
+RECOMMENDATIONS
+------------------------------
+1. ✅ Good foundation - apply recommendations for excellence

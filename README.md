@@ -268,20 +268,3 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 MSc Computer Science Student  
 Newcastle University  
 
-- 📧 Email: l.parker5@newcastle.ac.uk
-- 💻 GitHub: [leon-parker](https://github.com/leon-parker)
-- 🔗 LinkedIn: [Add if available]
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Special thanks to the special education professionals who provided invaluable feedback
-- Newcastle University School of Computing for research support
-- The autism education community for insights into visual design principles
-
----
-
-*Developed for improving autism education through AI*
