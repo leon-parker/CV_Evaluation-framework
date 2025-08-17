@@ -1,0 +1,148 @@
+{
+  "evaluation_timestamp": "20250817_174009",
+  "framework_version": "Advanced Autism Evaluation Framework v2.0",
+  "hierarchy_weights": {
+    "simplicity": "36.36%",
+    "accuracy": "33.33%",
+    "consistency": "30.30%"
+  },
+  "optimized_sequence": {
+    "total_images": 2,
+    "average_score": 0.7609516875295039,
+    "images": [
+      {
+        "image_index": 1,
+        "combined_score": 0.742799553493218,
+        "autism_grade": "C+ (Acceptable with improvements)",
+        "category_scores": {
+          "simplicity": 0.7231418713302576,
+          "accuracy": 0.7642667294117647,
+          "consistency": null
+        },
+        "recommendations": [
+          "✅ Good foundation - apply recommendations for excellence"
+        ],
+        "generation_method": "optimized",
+        "features": [
+          "multi-generation selection",
+          "AI refinement",
+          "autism-friendly prompts",
+          "IP-Adapter consistency simulation"
+        ],
+        "autism_metrics": {
+          "people_count": 1,
+          "background_simplicity": 0.5361224906087805,
+          "color_appropriateness": 0.5997502712709366,
+          "character_clarity": 0.21221807847539798
+        }
+      },
+      {
+        "image_index": 2,
+        "combined_score": 0.7791038215657897,
+        "autism_grade": "B (Suitable with minor improvements)",
+        "category_scores": {
+          "simplicity": 0.7420221522726291,
+          "accuracy": 0.8073596235294118,
+          "consistency": 0.7925230136027807
+        },
+        "recommendations": [
+          "✅ Good foundation - apply recommendations for excellence"
+        ],
+        "generation_method": "optimized",
+        "features": [
+          "multi-generation selection",
+          "AI refinement",
+          "autism-friendly prompts",
+          "IP-Adapter consistency simulation"
+        ],
+        "autism_metrics": {
+          "people_count": 1,
+          "background_simplicity": 0.5850213202721937,
+          "color_appropriateness": 0.6080428654109696,
+          "character_clarity": 0.1846470866542536
+        }
+      }
+    ]
+  },
+  "complex_sequence": {
+    "total_images": 2,
+    "average_score": 0.4190928822936204,
+    "images": [
+      {
+        "image_index": 1,
+        "combined_score": 0.416279909346992,
+        "autism_grade": "F (Not suitable for autism education)",
+        "category_scores": {
+          "simplicity": 0.36556342862560054,
+          "accuracy": 0.6893844705882353,
+          "consistency": null
+        },
+        "recommendations": [
+          "⚠️ Significant improvements needed for autism suitability",
+          "👥 CRITICAL: Reduce to 1-2 people (currently 10)",
+          "🎨 Simplify background: remove distracting elements",
+          "🌈 Reduce color palette to 4-6 main colors",
+          "✏️ Improve character definition: clearer outlines",
+          "🎯 Improve prompt accuracy: ensure image matches description"
+        ],
+        "generation_method": "complex",
+        "features": [
+          "complex prompts",
+          "multiple people/objects",
+          "random seeds (no consistency)",
+          "lower quality settings"
+        ],
+        "autism_metrics": {
+          "people_count": 10,
+          "background_simplicity": 0.26751657376876214,
+          "color_appropriateness": 0.7348378012276976,
+          "character_clarity": 0.5675440291754208
+        },
+        "problem_areas": [
+          "Too many people: 10 (autism limit: 1-2)",
+          "Complex background: 0.268 (autism target: >0.6)",
+          "Too many colors: 10 (autism target: 4-6)"
+        ]
+      },
+      {
+        "image_index": 2,
+        "combined_score": 0.4219058552402488,
+        "autism_grade": "F (Not suitable for autism education)",
+        "category_scores": {
+          "simplicity": 0.35866829220184415,
+          "accuracy": 0.5416922352941176,
+          "consistency": 0.714099983763677
+        },
+        "recommendations": [
+          "⚠️ Significant improvements needed for autism suitability",
+          "👥 CRITICAL: Reduce to 1-2 people (currently 10)",
+          "🎨 Simplify background: remove distracting elements",
+          "🌈 Reduce color palette to 4-6 main colors",
+          "🎯 Improve prompt accuracy: ensure image matches description"
+        ],
+        "generation_method": "complex",
+        "features": [
+          "complex prompts",
+          "multiple people/objects",
+          "random seeds (no consistency)",
+          "lower quality settings"
+        ],
+        "autism_metrics": {
+          "people_count": 10,
+          "background_simplicity": 0.23208383188010043,
+          "color_appropriateness": 0.7180988341381164,
+          "character_clarity": 0.6629438716730004
+        },
+        "problem_areas": [
+          "Too many people: 10 (autism limit: 1-2)",
+          "Complex background: 0.232 (autism target: >0.6)",
+          "Too many colors: 10 (autism target: 4-6)"
+        ]
+      }
+    ]
+  },
+  "comparison_metrics": {
+    "score_improvement": 81.6,
+    "discrimination_power": "EXCELLENT"
+  }
+}

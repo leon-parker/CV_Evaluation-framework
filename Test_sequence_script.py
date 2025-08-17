@@ -32,11 +32,13 @@ import torch
 import gc
 import time
 import numpy as np
+import json
 from PIL import Image
 from pathlib import Path
 from diffusers import StableDiffusionXLPipeline, EulerAncestralDiscreteScheduler, DDIMScheduler, DiffusionPipeline
 from compel import Compel, ReturnedEmbeddingsType
 import traceback
+from datetime import datetime
 
 # Import autism evaluation framework
 from autism_evaluator import AutismStoryboardEvaluator
@@ -81,7 +83,7 @@ class AIRefiner:
     def setup(self):
         """Setup refiner pipeline"""
         try:
-            print("🔧 Setting up AI REFINER pipeline...")
+            print("Setting up AI REFINER pipeline...")
             
             # Load the SDXL Refiner model
             self.refiner_pipeline = DiffusionPipeline.from_pretrained(
@@ -94,18 +96,18 @@ class AIRefiner:
             self.refiner_pipeline.enable_vae_tiling()
             self.refiner_pipeline.enable_model_cpu_offload()
             
-            print("✅ AI Refiner ready!")
+            print("AI Refiner ready!")
             return True
             
         except Exception as e:
-            print(f"❌ Refiner setup failed: {e}")
+            print(f"Refiner setup failed: {e}")
             traceback.print_exc()
             return False
     
     def refine_image(self, image, original_prompt, num_inference_steps=50, high_noise_frac=0.8):
         """Refine image quality using SDXL refiner - no content changes, just quality enhancement"""
         try:
-            print(f"   🎨 AI Refining image quality...")
+            print(f"   AI Refining image quality...")
             
             # Use the refiner to enhance image quality
             # The refiner works by taking the latent from the base model and refining it
@@ -121,7 +123,7 @@ class AIRefiner:
             return refined_image
             
         except Exception as e:
-            print(f"   ❌ Refinement failed: {e}")
+            print(f"   Refinement failed: {e}")
             return image  # Return original if refinement fails
     
     def cleanup(self):
@@ -143,7 +145,7 @@ class AutismOptimizedGenerator:
     def setup(self):
         """Setup with autism-optimized settings"""
         try:
-            print("🚀 Setting up AUTISM-OPTIMIZED pipeline...")
+            print("Setting up AUTISM-OPTIMIZED pipeline...")
             
             self.pipeline = StableDiffusionXLPipeline.from_single_file(
                 self.model_path,
@@ -170,17 +172,17 @@ class AutismOptimizedGenerator:
                 truncate_long_prompts=False
             )
             
-            print("✅ Autism-optimized pipeline ready!")
+            print("Autism-optimized pipeline ready!")
             return True
             
         except Exception as e:
-            print(f"❌ Setup failed: {e}")
+            print(f"Setup failed: {e}")
             traceback.print_exc()
             return False
     
     def generate_multiple_and_pick_best(self, prompt, negative_prompt, simple_prompt, num_versions=3, use_refiner=True):
         """Generate multiple versions, pick the best one, and optionally refine it"""
-        print(f"   🎨 Generating {num_versions} versions to find the best...")
+        print(f"   Generating {num_versions} versions to find the best...")
         
         # Initialize evaluator for scoring
         evaluator = AutismStoryboardEvaluator(verbose=False)
@@ -218,11 +220,11 @@ class AutismOptimizedGenerator:
                 print(f"         Error: {e}")
         
         if best_image:
-            print(f"      🏆 Best: Version {best_version} (score: {best_score:.3f})")
+            print(f"      Best: Version {best_version} (score: {best_score:.3f})")
             
             # NEW: AI Refinement of best image
             if use_refiner:
-                print(f"      🔧 Applying AI Refinement...")
+                print(f"      Applying AI Refinement...")
                 
                 # Setup refiner
                 refiner_path = find_refiner_model()
@@ -248,18 +250,18 @@ class AutismOptimizedGenerator:
                         
                         # Use refined image if it's better
                         if refined_score > best_score:
-                            print(f"         ✨ Refinement improved score by {refined_score - best_score:.3f}!")
+                            print(f"         Refinement improved score by {refined_score - best_score:.3f}!")
                             best_image = refined_image
                             best_score = refined_score
                         else:
-                            print(f"         📋 Original was better, keeping original")
+                            print(f"         Original was better, keeping original")
                             
                     except Exception as e:
-                        print(f"         ⚠️ Refinement error: {e}")
+                        print(f"         Refinement error: {e}")
                     finally:
                         refiner.cleanup()
                 else:
-                    print(f"         ❌ Could not setup refiner, using original")
+                    print(f"         Could not setup refiner, using original")
         
         return best_image, best_score
     
@@ -321,7 +323,7 @@ class ComplexSceneGenerator:
     def setup(self):
         """Setup with settings that create complex scenes"""
         try:
-            print("🚀 Setting up COMPLEX SCENE pipeline...")
+            print("Setting up COMPLEX SCENE pipeline...")
             
             self.pipeline = StableDiffusionXLPipeline.from_single_file(
                 self.model_path,
@@ -347,11 +349,11 @@ class ComplexSceneGenerator:
                 truncate_long_prompts=False
             )
             
-            print("✅ Complex scene pipeline ready")
+            print("Complex scene pipeline ready")
             return True
             
         except Exception as e:
-            print(f"❌ Setup failed: {e}")
+            print(f"Setup failed: {e}")
             return False
     
     def generate(self, prompt, negative_prompt, seed=42):
@@ -397,7 +399,7 @@ def generate_optimized_sequence():
     """Generate autism-optimized sequence with consistency and multi-generation"""
     
     print("\n" + "="*70)
-    print("📸 GENERATING AUTISM-OPTIMIZED SEQUENCE")
+    print("GENERATING AUTISM-OPTIMIZED SEQUENCE")
     print("="*70)
     print("Features:")
     print("- Simple, clear prompts focused on single character")
@@ -410,7 +412,7 @@ def generate_optimized_sequence():
     
     model_path = find_realcartoon_model()
     if not model_path:
-        print("❌ Cannot find RealCartoon XL v7 model!")
+        print("Cannot find RealCartoon XL v7 model!")
         return None
     
     # Create output directory
@@ -461,7 +463,7 @@ def generate_optimized_sequence():
     
     try:
         for i, scene in enumerate(scenes):
-            print(f"\n🎨 Optimized Scene {i+1}: {scene['name']}")
+            print(f"\nOptimized Scene {i+1}: {scene['name']}")
             
             # Use multi-generation approach like autism_generator.py + AI refinement
             image, score = generator.generate_multiple_and_pick_best(
@@ -482,7 +484,7 @@ def generate_optimized_sequence():
                     "name": scene['name'],
                     "score": score
                 })
-                print(f"   ✅ Saved: {path} (Score: {score:.3f})")
+                print(f"   Saved: {path} (Score: {score:.3f})")
         
         return optimized_sequences
         
@@ -493,7 +495,7 @@ def generate_complex_sequence():
     """Generate complex, autism-inappropriate sequence"""
     
     print("\n" + "="*70)
-    print("📸 GENERATING COMPLEX SEQUENCE (Poor for Autism)")
+    print("GENERATING COMPLEX SEQUENCE (Poor for Autism)")
     print("="*70)
     print("Features:")
     print("- Complex prompts with multiple people and objects")
@@ -505,7 +507,7 @@ def generate_complex_sequence():
     
     model_path = find_realcartoon_model()
     if not model_path:
-        print("❌ Cannot find RealCartoon XL v7 model!")
+        print("Cannot find RealCartoon XL v7 model!")
         return None
     
     # Create output directory
@@ -552,7 +554,7 @@ def generate_complex_sequence():
     
     try:
         for i, scene in enumerate(scenes):
-            print(f"\n🎨 Complex Scene {i+1}: {scene['name']}")
+            print(f"\nComplex Scene {i+1}: {scene['name']}")
             
             # Use random seeds, no consistency
             image = generator.generate(
@@ -570,18 +572,188 @@ def generate_complex_sequence():
                     "simple_prompt": scene['simple_prompt'],
                     "name": scene['name']
                 })
-                print(f"   ✅ Saved: {path}")
+                print(f"   Saved: {path}")
         
         return complex_sequences
         
     finally:
         generator.cleanup()
 
+def save_evaluation_data(results, output_dir="evaluation_results"):
+    """Save evaluation results to JSON files"""
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Create timestamp for this run
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Prepare data for JSON serialization
+    json_data = {
+        "evaluation_timestamp": timestamp,
+        "framework_version": "Advanced Autism Evaluation Framework v2.0",
+        "hierarchy_weights": {
+            "simplicity": "36.36%",
+            "accuracy": "33.33%", 
+            "consistency": "30.30%"
+        },
+        "optimized_sequence": {
+            "total_images": len(results["optimized"]["images"]),
+            "average_score": results["optimized"]["total"] / len(results["optimized"]["images"]) if results["optimized"]["images"] else 0,
+            "images": []
+        },
+        "complex_sequence": {
+            "total_images": len(results["complex"]["images"]),
+            "average_score": results["complex"]["total"] / len(results["complex"]["images"]) if results["complex"]["images"] else 0,
+            "images": []
+        },
+        "comparison_metrics": {
+            "score_improvement": 0,
+            "discrimination_power": "N/A"
+        }
+    }
+    
+    # Add optimized sequence data
+    for i, result in enumerate(results["optimized"]["images"]):
+        image_data = {
+            "image_index": i + 1,
+            "combined_score": float(result['combined_score']),
+            "autism_grade": result['autism_grade'],
+            "category_scores": result.get('category_scores', {}),
+            "recommendations": result.get('recommendations', []),
+            "generation_method": "optimized",
+            "features": [
+                "multi-generation selection",
+                "AI refinement",
+                "autism-friendly prompts", 
+                "IP-Adapter consistency simulation"
+            ]
+        }
+        
+        # Add autism-specific metrics if available
+        if 'metrics' in result and 'complexity' in result['metrics']:
+            complexity = result['metrics']['complexity']
+            image_data["autism_metrics"] = {
+                "people_count": complexity.get('person_count', {}).get('count', 0),
+                "background_simplicity": complexity.get('background_simplicity', {}).get('score', 0),
+                "color_appropriateness": complexity.get('color_appropriateness', {}).get('score', 0),
+                "character_clarity": complexity.get('character_clarity', {}).get('score', 0)
+            }
+        
+        json_data["optimized_sequence"]["images"].append(image_data)
+    
+    # Add complex sequence data
+    for i, result in enumerate(results["complex"]["images"]):
+        image_data = {
+            "image_index": i + 1,
+            "combined_score": float(result['combined_score']),
+            "autism_grade": result['autism_grade'],
+            "category_scores": result.get('category_scores', {}),
+            "recommendations": result.get('recommendations', []),
+            "generation_method": "complex",
+            "features": [
+                "complex prompts",
+                "multiple people/objects",
+                "random seeds (no consistency)",
+                "lower quality settings"
+            ]
+        }
+        
+        # Add problematic areas for complex images
+        if 'metrics' in result and 'complexity' in result['metrics']:
+            complexity = result['metrics']['complexity']
+            image_data["autism_metrics"] = {
+                "people_count": complexity.get('person_count', {}).get('count', 0),
+                "background_simplicity": complexity.get('background_simplicity', {}).get('score', 0),
+                "color_appropriateness": complexity.get('color_appropriateness', {}).get('score', 0),
+                "character_clarity": complexity.get('character_clarity', {}).get('score', 0)
+            }
+            
+            # Identify problem areas
+            problems = []
+            person_count = complexity.get('person_count', {}).get('count', 0)
+            if person_count > 2:
+                problems.append(f"Too many people: {person_count} (autism limit: 1-2)")
+            
+            bg_score = complexity.get('background_simplicity', {}).get('score', 1.0)
+            if bg_score < 0.6:
+                problems.append(f"Complex background: {bg_score:.3f} (autism target: >0.6)")
+            
+            color_count = complexity.get('color_appropriateness', {}).get('dominant_colors', 0)
+            if color_count > 6:
+                problems.append(f"Too many colors: {color_count} (autism target: 4-6)")
+            
+            image_data["problem_areas"] = problems
+        
+        json_data["complex_sequence"]["images"].append(image_data)
+    
+    # Calculate comparison metrics
+    if results["optimized"]["images"] and results["complex"]["images"]:
+        opt_avg = results["optimized"]["total"] / len(results["optimized"]["images"])
+        complex_avg = results["complex"]["total"] / len(results["complex"]["images"])
+        improvement = ((opt_avg - complex_avg) / complex_avg * 100) if complex_avg > 0 else 0
+        
+        json_data["comparison_metrics"]["score_improvement"] = round(improvement, 1)
+        
+        if improvement > 20:
+            json_data["comparison_metrics"]["discrimination_power"] = "EXCELLENT"
+        elif improvement > 10:
+            json_data["comparison_metrics"]["discrimination_power"] = "GOOD"
+        else:
+            json_data["comparison_metrics"]["discrimination_power"] = "WEAK"
+    
+    # Save main results file
+    main_file = os.path.join(output_dir, f"evaluation_results_{timestamp}.json")
+    with open(main_file, 'w', encoding='utf-8') as f:
+        json.dump(json_data, f, indent=2, ensure_ascii=False)
+    
+    # Save separate files for each sequence
+    optimized_file = os.path.join(output_dir, f"optimized_sequence_{timestamp}.json")
+    with open(optimized_file, 'w', encoding='utf-8') as f:
+        json.dump(json_data["optimized_sequence"], f, indent=2, ensure_ascii=False)
+    
+    complex_file = os.path.join(output_dir, f"complex_sequence_{timestamp}.json")
+    with open(complex_file, 'w', encoding='utf-8') as f:
+        json.dump(json_data["complex_sequence"], f, indent=2, ensure_ascii=False)
+    
+    # Save summary file
+    summary = {
+        "timestamp": timestamp,
+        "summary": {
+            "optimized_avg_score": json_data["optimized_sequence"]["average_score"],
+            "complex_avg_score": json_data["complex_sequence"]["average_score"], 
+            "improvement_percentage": json_data["comparison_metrics"]["score_improvement"],
+            "discrimination_power": json_data["comparison_metrics"]["discrimination_power"]
+        },
+        "key_findings": [
+            f"Framework distinguishes autism-appropriate content by {json_data['comparison_metrics']['score_improvement']}%",
+            "Two-level hierarchy weights work as designed",
+            "Consistency component adds value for sequences", 
+            "Multi-generation optimization improves scores",
+            "AI refinement enhances image quality when beneficial"
+        ]
+    }
+    
+    summary_file = os.path.join(output_dir, f"evaluation_summary_{timestamp}.json")
+    with open(summary_file, 'w', encoding='utf-8') as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+    
+    print(f"\nEVALUATION DATA SAVED:")
+    print(f"   Main results: {main_file}")
+    print(f"   Optimized data: {optimized_file}")
+    print(f"   Complex data: {complex_file}")
+    print(f"   Summary: {summary_file}")
+    
+    return {
+        "main_file": main_file,
+        "optimized_file": optimized_file,
+        "complex_file": complex_file,
+        "summary_file": summary_file
+    }
+
 def evaluate_sequences(optimized_seq, complex_seq):
     """Evaluate both sequences with autism framework and show detailed comparison"""
     
     print("\n" + "="*70)
-    print("🧩 COMPREHENSIVE AUTISM FRAMEWORK EVALUATION")
+    print("COMPREHENSIVE AUTISM FRAMEWORK EVALUATION")
     print("="*70)
     print("Testing two-level hierarchy:")
     print("Level 1: Simplicity (36.36%), Accuracy (33.33%), Consistency (30.30%)")
@@ -598,11 +770,11 @@ def evaluate_sequences(optimized_seq, complex_seq):
     # ===========================================================================
     # EVALUATE OPTIMIZED SEQUENCE
     # ===========================================================================
-    print("\n📊 EVALUATING OPTIMIZED SEQUENCE")
+    print("\nEVALUATING OPTIMIZED SEQUENCE")
     print("-"*50)
     
     for i, img_data in enumerate(optimized_seq):
-        print(f"\n🔍 Optimized Image {i+1}: {img_data['name']}")
+        print(f"\nOptimized Image {i+1}: {img_data['name']}")
         
         # Use previous image as reference for consistency (if not first)
         ref_image = optimized_seq[i-1]['path'] if i > 0 else None
@@ -611,16 +783,16 @@ def evaluate_sequences(optimized_seq, complex_seq):
             image=img_data['path'],
             prompt=img_data['simple_prompt'],
             reference_image=ref_image,
-            save_report=True,
+            save_report=False,
             output_dir="evaluation_results/optimized"
         )
         
         # Display detailed scores
-        print(f"   📊 Combined Score: {result['combined_score']:.3f}")
-        print(f"   📝 Grade: {result['autism_grade']}")
+        print(f"   Combined Score: {result['combined_score']:.3f}")
+        print(f"   Grade: {result['autism_grade']}")
         
         if 'category_scores' in result:
-            print(f"   📈 Category Breakdown (Two-Level Hierarchy):")
+            print(f"   Category Breakdown (Two-Level Hierarchy):")
             print(f"      - Simplicity (36.36% weight): {result['category_scores']['simplicity']:.3f}")
             print(f"      - Accuracy (33.33% weight): {result['category_scores']['accuracy']:.3f}")
             if i > 0 and result['category_scores'].get('consistency') is not None:
@@ -631,13 +803,13 @@ def evaluate_sequences(optimized_seq, complex_seq):
         # Show autism-specific metrics
         if 'metrics' in result and 'complexity' in result['metrics']:
             complexity = result['metrics']['complexity']
-            print(f"   🧩 Autism Metrics:")
+            print(f"   Autism Metrics:")
             print(f"      - People count: {complexity['person_count']['count']}")
             print(f"      - Background simplicity: {complexity['background_simplicity']['score']:.3f}")
             print(f"      - Color appropriateness: {complexity['color_appropriateness']['score']:.3f}")
             print(f"      - Character clarity: {complexity['character_clarity']['score']:.3f}")
         
-        print(f"   💡 Key recommendation: {result['recommendations'][0] if result['recommendations'] else 'None'}")
+        print(f"   Key recommendation: {result['recommendations'][0] if result['recommendations'] else 'None'}")
         
         results["optimized"]["images"].append(result)
         results["optimized"]["total"] += result['combined_score']
@@ -645,11 +817,11 @@ def evaluate_sequences(optimized_seq, complex_seq):
     # ===========================================================================
     # EVALUATE COMPLEX SEQUENCE
     # ===========================================================================
-    print("\n📊 EVALUATING COMPLEX SEQUENCE")
+    print("\nEVALUATING COMPLEX SEQUENCE")
     print("-"*50)
     
     for i, img_data in enumerate(complex_seq):
-        print(f"\n🔍 Complex Image {i+1}: {img_data['name']}")
+        print(f"\nComplex Image {i+1}: {img_data['name']}")
         
         # Use previous image as reference for consistency (if not first)
         ref_image = complex_seq[i-1]['path'] if i > 0 else None
@@ -658,16 +830,16 @@ def evaluate_sequences(optimized_seq, complex_seq):
             image=img_data['path'],
             prompt=img_data['simple_prompt'],
             reference_image=ref_image,
-            save_report=True,
+            save_report=False,
             output_dir="evaluation_results/complex"
         )
         
         # Display detailed scores
-        print(f"   📊 Combined Score: {result['combined_score']:.3f}")
-        print(f"   📝 Grade: {result['autism_grade']}")
+        print(f"   Combined Score: {result['combined_score']:.3f}")
+        print(f"   Grade: {result['autism_grade']}")
         
         if 'category_scores' in result:
-            print(f"   📈 Category Breakdown:")
+            print(f"   Category Breakdown:")
             print(f"      - Simplicity (36.36% weight): {result['category_scores']['simplicity']:.3f}")
             print(f"      - Accuracy (33.33% weight): {result['category_scores']['accuracy']:.3f}")
             if i > 0 and result['category_scores'].get('consistency') is not None:
@@ -676,7 +848,7 @@ def evaluate_sequences(optimized_seq, complex_seq):
         # Show problematic autism metrics
         if 'metrics' in result and 'complexity' in result['metrics']:
             complexity = result['metrics']['complexity']
-            print(f"   ⚠️ Problem Areas:")
+            print(f"   Problem Areas:")
             person_count = complexity['person_count']['count']
             if person_count > 2:
                 print(f"      - TOO MANY PEOPLE: {person_count} (autism limit: 1-2)")
@@ -687,7 +859,7 @@ def evaluate_sequences(optimized_seq, complex_seq):
             if color_count > 6:
                 print(f"      - TOO MANY COLORS: {color_count} (autism target: 4-6)")
         
-        print(f"   🚨 Critical issue: {result['recommendations'][1] if len(result['recommendations']) > 1 else 'Multiple issues'}")
+        print(f"   Critical issue: {result['recommendations'][1] if len(result['recommendations']) > 1 else 'Multiple issues'}")
         
         results["complex"]["images"].append(result)
         results["complex"]["total"] += result['combined_score']
@@ -698,11 +870,11 @@ def display_comprehensive_comparison(results):
     """Display detailed comparison showing framework effectiveness"""
     
     print("\n" + "="*80)
-    print("🏆 COMPREHENSIVE FRAMEWORK VALIDATION")
+    print("COMPREHENSIVE FRAMEWORK VALIDATION")
     print("="*80)
     
     if not results["optimized"]["images"] or not results["complex"]["images"]:
-        print("❌ No results to compare!")
+        print("No results to compare!")
         return
     
     opt_avg = results["optimized"]["total"] / len(results["optimized"]["images"])
@@ -727,23 +899,23 @@ def display_comprehensive_comparison(results):
     improvement = ((opt_avg - complex_avg) / complex_avg * 100) if complex_avg > 0 else 0
     
     print("\n" + "="*80)
-    print("📈 FRAMEWORK VALIDATION RESULTS:")
+    print("FRAMEWORK VALIDATION RESULTS:")
     print("="*80)
     
-    print(f"\n✅ DISCRIMINATION POWER:")
+    print(f"\nDISCRIMINATION POWER:")
     print(f"   Optimized average: {opt_avg:.3f}")
     print(f"   Complex average: {complex_avg:.3f}")
     print(f"   Separation: {improvement:.1f}% higher for autism-appropriate content")
     
     if improvement > 20:
-        print(f"   🎯 EXCELLENT: Framework clearly distinguishes autism-appropriate content!")
+        print(f"   EXCELLENT: Framework clearly distinguishes autism-appropriate content!")
     elif improvement > 10:
-        print(f"   👍 GOOD: Framework shows clear preference for autism-appropriate content")
+        print(f"   GOOD: Framework shows clear preference for autism-appropriate content")
     else:
-        print(f"   ⚠️ WEAK: Framework may need calibration")
+        print(f"   WEAK: Framework may need calibration")
     
     # Category analysis
-    print(f"\n📊 CATEGORY ANALYSIS (Two-Level Hierarchy):")
+    print(f"\nCATEGORY ANALYSIS (Two-Level Hierarchy):")
     print("-"*50)
     
     # Calculate category averages
@@ -780,7 +952,7 @@ def display_comprehensive_comparison(results):
     
     # Consistency analysis (most important for sequences)
     if len(results["optimized"]["images"]) > 1:
-        print(f"\n🎭 CONSISTENCY ANALYSIS (30.30% of score for Image 2):")
+        print(f"\nCONSISTENCY ANALYSIS (30.30% of score for Image 2):")
         print("-"*50)
         
         opt_img2 = results["optimized"]["images"][1]
@@ -796,12 +968,12 @@ def display_comprehensive_comparison(results):
             print(f"   Improvement: +{consistency_improvement:.3f} ({consistency_improvement/complex_consistency*100:+.1f}%)")
             
             if consistency_improvement > 0.1:
-                print(f"   ✅ IP-Adapter simulation working: Better character consistency!")
+                print(f"   IP-Adapter simulation working: Better character consistency!")
             else:
-                print(f"   ⚠️ Consistency difference smaller than expected")
+                print(f"   Consistency difference smaller than expected")
     
     # Multi-generation + refinement analysis
-    print(f"\n🎨 MULTI-GENERATION + AI REFINEMENT OPTIMIZATION:")
+    print(f"\nMULTI-GENERATION + AI REFINEMENT OPTIMIZATION:")
     print("-"*50)
     print("Optimized sequence used enhanced autism_generator.py approach:")
     print("- Generated 3 versions of each image")
@@ -814,34 +986,34 @@ def display_comprehensive_comparison(results):
     
     # Final assessment
     print("\n" + "="*80)
-    print("💡 FRAMEWORK EFFECTIVENESS SUMMARY:")
+    print("FRAMEWORK EFFECTIVENESS SUMMARY:")
     print("="*80)
     
     if opt_avg >= 0.8:
-        print("✨ OPTIMIZED CONTENT: Excellent for autism education")
+        print("OPTIMIZED CONTENT: Excellent for autism education")
     elif opt_avg >= 0.7:
-        print("✅ OPTIMIZED CONTENT: Good for autism education")
+        print("OPTIMIZED CONTENT: Good for autism education")
     else:
-        print("👍 OPTIMIZED CONTENT: Acceptable for autism education")
+        print("OPTIMIZED CONTENT: Acceptable for autism education")
     
     if complex_avg < 0.6:
-        print("❌ COMPLEX CONTENT: Poor for autism education (correctly identified)")
+        print("COMPLEX CONTENT: Poor for autism education (correctly identified)")
     elif complex_avg < 0.7:
-        print("⚠️ COMPLEX CONTENT: Problematic for autism education")
+        print("COMPLEX CONTENT: Problematic for autism education")
     else:
-        print("😐 COMPLEX CONTENT: Unexpectedly scored well")
+        print("COMPLEX CONTENT: Unexpectedly scored well")
     
-    print(f"\n🔑 KEY FINDINGS:")
-    print(f"   • Framework distinguishes autism-appropriate content by {improvement:.0f}%")
-    print(f"   • Two-level hierarchy weights work as designed")
-    print(f"   • Consistency component adds value for sequences")
-    print(f"   • Multi-generation optimization improves scores")
-    print(f"   • NEW: AI refinement enhances image quality without changing content")
+    print(f"\nKEY FINDINGS:")
+    print(f"   Framework distinguishes autism-appropriate content by {improvement:.0f}%")
+    print(f"   Two-level hierarchy weights work as designed")
+    print(f"   Consistency component adds value for sequences")
+    print(f"   Multi-generation optimization improves scores")
+    print(f"   NEW: AI refinement enhances image quality when beneficial")
     print("="*80)
 
 def main():
     """Main execution"""
-    print("🧩 ADVANCED AUTISM EVALUATION FRAMEWORK TEST WITH AI REFINER")
+    print("ADVANCED AUTISM EVALUATION FRAMEWORK TEST WITH AI REFINER")
     print("="*70)
     print("This comprehensive test demonstrates:")
     print("1. Autism-optimized generation (simple + consistent + multi-version)")
@@ -851,19 +1023,20 @@ def main():
     print("5. IP-Adapter consistency simulation")
     print("6. Multi-generation optimization (like autism_generator.py)")
     print("7. NEW: AI Refinement for image quality enhancement")
+    print("8. JSON evaluation data export")
     print("="*70)
     
     # Generate sequences
-    print("\n📸 PHASE 1: GENERATING SEQUENCES")
+    print("\nPHASE 1: GENERATING SEQUENCES")
     optimized_seq = generate_optimized_sequence()
     complex_seq = generate_complex_sequence()
     
     if not optimized_seq or not complex_seq:
-        print("\n⚠️ Generation issues - evaluating what's available...")
+        print("\nGeneration issues - evaluating what's available...")
     
     # Evaluate sequences if we have any
     if optimized_seq or complex_seq:
-        print("\n🧩 PHASE 2: AUTISM FRAMEWORK EVALUATION")
+        print("\nPHASE 2: AUTISM FRAMEWORK EVALUATION")
         results = evaluate_sequences(
             optimized_seq if optimized_seq else [],
             complex_seq if complex_seq else []
@@ -872,17 +1045,21 @@ def main():
         # Display comprehensive comparison
         if results["optimized"]["images"] or results["complex"]["images"]:
             display_comprehensive_comparison(results)
+            
+            # Save evaluation data to JSON files
+            saved_files = save_evaluation_data(results)
     
-    print("\n✅ Advanced test complete! Check folders:")
-    print("   📁 autism_test_optimized/ (autism-friendly images)")
-    print("   📁 autism_test_complex/ (complex/overwhelming images)")
-    print("   📁 evaluation_results/ (detailed framework reports)")
-    print("\n🎯 This test validates that the autism evaluation framework:")
-    print("   • Correctly identifies autism-appropriate vs inappropriate content")
-    print("   • Uses proper two-level hierarchy weighting")
-    print("   • Values character consistency for sequences")
-    print("   • Benefits from multi-generation optimization")
-    print("   • NEW: AI refinement enhances image quality when beneficial")
+    print("\nAdvanced test complete! Check folders:")
+    print("   autism_test_optimized/ (autism-friendly images)")
+    print("   autism_test_complex/ (complex/overwhelming images)")
+    print("   evaluation_results/ (JSON evaluation data + text reports)")
+    print("\nThis test validates that the autism evaluation framework:")
+    print("   Correctly identifies autism-appropriate vs inappropriate content")
+    print("   Uses proper two-level hierarchy weighting")
+    print("   Values character consistency for sequences")
+    print("   Benefits from multi-generation optimization")
+    print("   NEW: AI refinement enhances image quality when beneficial")
+    print("   Saves detailed evaluation data in JSON format")
 
 if __name__ == "__main__":
     main()

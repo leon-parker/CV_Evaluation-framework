@@ -1,0 +1,77 @@
+{
+  "total_images": 2,
+  "average_score": 0.4190928822936204,
+  "images": [
+    {
+      "image_index": 1,
+      "combined_score": 0.416279909346992,
+      "autism_grade": "F (Not suitable for autism education)",
+      "category_scores": {
+        "simplicity": 0.36556342862560054,
+        "accuracy": 0.6893844705882353,
+        "consistency": null
+      },
+      "recommendations": [
+        "⚠️ Significant improvements needed for autism suitability",
+        "👥 CRITICAL: Reduce to 1-2 people (currently 10)",
+        "🎨 Simplify background: remove distracting elements",
+        "🌈 Reduce color palette to 4-6 main colors",
+        "✏️ Improve character definition: clearer outlines",
+        "🎯 Improve prompt accuracy: ensure image matches description"
+      ],
+      "generation_method": "complex",
+      "features": [
+        "complex prompts",
+        "multiple people/objects",
+        "random seeds (no consistency)",
+        "lower quality settings"
+      ],
+      "autism_metrics": {
+        "people_count": 10,
+        "background_simplicity": 0.26751657376876214,
+        "color_appropriateness": 0.7348378012276976,
+        "character_clarity": 0.5675440291754208
+      },
+      "problem_areas": [
+        "Too many people: 10 (autism limit: 1-2)",
+        "Complex background: 0.268 (autism target: >0.6)",
+        "Too many colors: 10 (autism target: 4-6)"
+      ]
+    },
+    {
+      "image_index": 2,
+      "combined_score": 0.4219058552402488,
+      "autism_grade": "F (Not suitable for autism education)",
+      "category_scores": {
+        "simplicity": 0.35866829220184415,
+        "accuracy": 0.5416922352941176,
+        "consistency": 0.714099983763677
+      },
+      "recommendations": [
+        "⚠️ Significant improvements needed for autism suitability",
+        "👥 CRITICAL: Reduce to 1-2 people (currently 10)",
+        "🎨 Simplify background: remove distracting elements",
+        "🌈 Reduce color palette to 4-6 main colors",
+        "🎯 Improve prompt accuracy: ensure image matches description"
+      ],
+      "generation_method": "complex",
+      "features": [
+        "complex prompts",
+        "multiple people/objects",
+        "random seeds (no consistency)",
+        "lower quality settings"
+      ],
+      "autism_metrics": {
+        "people_count": 10,
+        "background_simplicity": 0.23208383188010043,
+        "color_appropriateness": 0.7180988341381164,
+        "character_clarity": 0.6629438716730004
+      },
+      "problem_areas": [
+        "Too many people: 10 (autism limit: 1-2)",
+        "Complex background: 0.232 (autism target: >0.6)",
+        "Too many colors: 10 (autism target: 4-6)"
+      ]
+    }
+  ]
+}

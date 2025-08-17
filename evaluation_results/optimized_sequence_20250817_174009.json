@@ -1,0 +1,58 @@
+{
+  "total_images": 2,
+  "average_score": 0.7609516875295039,
+  "images": [
+    {
+      "image_index": 1,
+      "combined_score": 0.742799553493218,
+      "autism_grade": "C+ (Acceptable with improvements)",
+      "category_scores": {
+        "simplicity": 0.7231418713302576,
+        "accuracy": 0.7642667294117647,
+        "consistency": null
+      },
+      "recommendations": [
+        "✅ Good foundation - apply recommendations for excellence"
+      ],
+      "generation_method": "optimized",
+      "features": [
+        "multi-generation selection",
+        "AI refinement",
+        "autism-friendly prompts",
+        "IP-Adapter consistency simulation"
+      ],
+      "autism_metrics": {
+        "people_count": 1,
+        "background_simplicity": 0.5361224906087805,
+        "color_appropriateness": 0.5997502712709366,
+        "character_clarity": 0.21221807847539798
+      }
+    },
+    {
+      "image_index": 2,
+      "combined_score": 0.7791038215657897,
+      "autism_grade": "B (Suitable with minor improvements)",
+      "category_scores": {
+        "simplicity": 0.7420221522726291,
+        "accuracy": 0.8073596235294118,
+        "consistency": 0.7925230136027807
+      },
+      "recommendations": [
+        "✅ Good foundation - apply recommendations for excellence"
+      ],
+      "generation_method": "optimized",
+      "features": [
+        "multi-generation selection",
+        "AI refinement",
+        "autism-friendly prompts",
+        "IP-Adapter consistency simulation"
+      ],
+      "autism_metrics": {
+        "people_count": 1,
+        "background_simplicity": 0.5850213202721937,
+        "color_appropriateness": 0.6080428654109696,
+        "character_clarity": 0.1846470866542536
+      }
+    }
+  ]
+}

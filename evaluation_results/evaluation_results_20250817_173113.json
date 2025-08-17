@@ -1,0 +1,22 @@
+{
+  "evaluation_timestamp": "20250817_173113",
+  "framework_version": "Advanced Autism Evaluation Framework v2.0",
+  "hierarchy_weights": {
+    "simplicity": "36.36%",
+    "accuracy": "33.33%",
+    "consistency": "30.30%"
+  },
+  "optimized_sequence": {
+    "total_images": 2,
+    "average_score": 0.7609516875295039,
+    "images": [
+      {
+        "image_index": 1,
+        "combined_score": 0.742799553493218,
+        "autism_grade": "C+ (Acceptable with improvements)",
+        "category_scores": {
+          "simplicity": 0.7231418713302576,
+          "accuracy": 0.7642667294117647,
+          "consistency": null
+        },
+        "recommendations": 

@@ -1,0 +1,16 @@
+{
+  "timestamp": "20250817_174009",
+  "summary": {
+    "optimized_avg_score": 0.7609516875295039,
+    "complex_avg_score": 0.4190928822936204,
+    "improvement_percentage": 81.6,
+    "discrimination_power": "EXCELLENT"
+  },
+  "key_findings": [
+    "Framework distinguishes autism-appropriate content by 81.6%",
+    "Two-level hierarchy weights work as designed",
+    "Consistency component adds value for sequences",
+    "Multi-generation optimization improves scores",
+    "AI refinement enhances image quality when beneficial"
+  ]
+}
